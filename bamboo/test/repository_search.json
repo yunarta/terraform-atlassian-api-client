@@ -1,0 +1,17 @@
+{
+  "size": 1,
+  "searchResults": [
+    {
+      "id": 1,
+      "name": "oraclelinux",
+      "url": "https://bamboo.funf/bamboo/admin/configureLinkedRepositories.action?repositoryId=1",
+      "rssEnabled": true
+    },
+    {
+      "id": 2,
+      "name": "ubuntu",
+      "url": "https://bamboo.funf/bamboo/admin/configureLinkedRepositories.action?repositoryId=2",
+      "rssEnabled": true
+    }
+  ]
+}

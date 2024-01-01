@@ -1,0 +1,17 @@
+{
+  "start": 0,
+  "limit": 25,
+  "results": [
+    {
+      "name": "LOGGED_IN",
+      "permissions": [
+        "READ"
+      ]
+    },
+    {
+      "name": "ANONYMOUS",
+      "permissions": [
+      ]
+    }
+  ]
+}

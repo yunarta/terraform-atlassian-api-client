@@ -1,0 +1,27 @@
+{
+  "size": 1,
+  "limit": 25,
+  "isLastPage": true,
+  "values": [
+    {
+      "user": {
+        "name": "yunarta",
+        "emailAddress": "yunarta.kartawahyudi@gmail.com",
+        "active": true,
+        "displayName": "Yunarta",
+        "id": 52,
+        "slug": "yunarta",
+        "type": "NORMAL",
+        "links": {
+          "self": [
+            {
+              "href": "https://bitbucket.funf/bitbucket/users/yunarta"
+            }
+          ]
+        }
+      },
+      "permission": "REPO_ADMIN"
+    }
+  ],
+  "start": 0
+}

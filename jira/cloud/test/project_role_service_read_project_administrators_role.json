@@ -1,0 +1,32 @@
+{
+  "self": "https://mobilesolutionworks.atlassian.net/rest/api/latest/project/10019/role/10002",
+  "name": "Administrators",
+  "id": 10002,
+  "description": "Administrators",
+  "actors": [
+    {
+      "id": 10015,
+      "displayName": "Trello",
+      "type": "atlassian-user-role-actor",
+      "actorUser": {
+        "accountId": "557058:214cdd6a-ff93-4d8b-838b-62dfcf1a2a71"
+      }
+    },
+    {
+      "id": 10263,
+      "displayName": "Yunarta Kartawahyudi",
+      "type": "atlassian-user-role-actor",
+      "actorUser": {
+        "accountId": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      }
+    },
+    {
+      "id": 10263,
+      "displayName": "Administrator",
+      "type": "atlassian-group-role-actor",
+      "actorGroup": {
+        "groupId": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      }
+    }
+  ]
+}

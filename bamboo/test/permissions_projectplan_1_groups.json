@@ -1,0 +1,20 @@
+{
+  "start": 0,
+  "limit": 25,
+  "results": [
+    {
+      "name": "bamboo-admin",
+      "editable": false,
+      "permissions": [
+        "READ"
+      ]
+    },
+    {
+      "name": "bamboo-user",
+      "editable": false,
+      "permissions": [
+        "READ"
+      ]
+    }
+  ]
+}

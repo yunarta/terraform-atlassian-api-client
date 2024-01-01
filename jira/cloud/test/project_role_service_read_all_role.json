@@ -1,0 +1,118 @@
+[
+  {
+    "self": "https://mobilesolutionworks.atlassian.net/rest/api/latest/role/10002",
+    "name": "Administrators",
+    "id": 10002,
+    "description": "A project role that represents administrators in a project"
+  },
+  {
+    "self": "https://mobilesolutionworks.atlassian.net/rest/api/latest/role/10003",
+    "name": "atlassian-addons-project-access",
+    "id": 10003,
+    "description": "A project role that represents Connect add-ons declaring a scope that requires more than read issue permissions",
+    "actors": [
+      {
+        "id": 10015,
+        "displayName": "Trello",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "557058:214cdd6a-ff93-4d8b-838b-62dfcf1a2a71"
+        }
+      },
+      {
+        "id": 10009,
+        "displayName": "Slack",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "557058:0867a421-a9ee-4659-801a-bc0ee4a4487e"
+        }
+      },
+      {
+        "id": 10021,
+        "displayName": "Proforma Migrator",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "63a22fb348b367d78a14c15b"
+        }
+      },
+      {
+        "id": 10005,
+        "displayName": "Atlassian Assist",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "5cb4ae0e4b97ab11a18e00c7"
+        }
+      },
+      {
+        "id": 10001,
+        "displayName": "Automation for Jira",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "557058:f58131cb-b67d-43c7-b30d-6b58d40bd077"
+        }
+      },
+      {
+        "id": 10023,
+        "displayName": "Atlas for Jira Cloud",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "630db2cd9796033b256bc349"
+        }
+      },
+      {
+        "id": 10003,
+        "displayName": "Jira Outlook",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "5d53f3cbc6b9320d9ea5bdc2"
+        }
+      },
+      {
+        "id": 10007,
+        "displayName": "Microsoft Teams for Jira Cloud",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "60e5a86a471e61006a4c51fd"
+        }
+      },
+      {
+        "id": 10019,
+        "displayName": "Jira Spreadsheets",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "5cf112d31552030f1e3a5905"
+        }
+      },
+      {
+        "id": 10011,
+        "displayName": "Jira Service Management Widget",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "557058:950f9f5b-3d6d-4e1d-954a-21367ae9ac75"
+        }
+      },
+      {
+        "id": 10017,
+        "displayName": "Statuspage for Jira",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "5b6c7b3afbc68529c6c47967"
+        }
+      },
+      {
+        "id": 10013,
+        "displayName": "System",
+        "type": "atlassian-user-role-actor",
+        "actorUser": {
+          "accountId": "5dd64082af96bc0efbe55103"
+        }
+      }
+    ]
+  },
+  {
+    "self": "https://mobilesolutionworks.atlassian.net/rest/api/latest/role/10008",
+    "name": "Developer",
+    "id": 10008,
+    "description": "Developer"
+  }
+]

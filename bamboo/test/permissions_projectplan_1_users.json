@@ -1,0 +1,22 @@
+{
+  "start": 0,
+  "limit": 25,
+  "results": [
+    {
+      "name": "yunarta",
+      "fullName": "Yunarta",
+      "email": "yunarta.kartawahyudi@gmail.com",
+      "permissions": [
+        "READ"
+      ]
+    },
+    {
+      "name": "bob",
+      "fullName": "bob",
+      "email": "bob@gmail.com",
+      "permissions": [
+        "READ"
+      ]
+    }
+  ]
+}

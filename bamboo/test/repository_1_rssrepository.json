@@ -1,0 +1,8 @@
+[
+  {
+    "id": 1,
+    "name": "ubuntu",
+    "url": "https://bamboo.funf/bamboo/admin/configureLinkedRepositories.action?repositoryId=2",
+    "rssEnabled": true
+  }
+]

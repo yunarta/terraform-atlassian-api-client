@@ -1,0 +1,6 @@
+{
+  "atlassian-addons-project-access": "https://mobilesolutionworks.atlassian.net/rest/api/latest/project/10019/role/10003",
+  "Administrators": "https://mobilesolutionworks.atlassian.net/rest/api/latest/project/10019/role/10002",
+  "Developer": "https://mobilesolutionworks.atlassian.net/rest/api/latest/project/10019/role/10008",
+  "Contributor": "https://mobilesolutionworks.atlassian.net/rest/api/latest/project/10019/role/10009"
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "slug",
+  "id": 103,
+  "name": "name",
+  "description": "new-description",
+  "project": {
+    "key": "A",
+    "name": "A"
+  }
+}

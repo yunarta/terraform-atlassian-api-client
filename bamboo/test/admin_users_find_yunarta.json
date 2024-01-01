@@ -1,0 +1,14 @@
+{
+  "start": 0,
+  "limit": 25,
+  "results": [
+    {
+      "name": "yunarta",
+      "fullName": "Yunarta",
+      "email": "yunarta.kartawahyudi@gmail.com",
+      "directoryName": "Bamboo Internal Directory",
+      "isActive": true,
+      "editable": true
+    }
+  ]
+}

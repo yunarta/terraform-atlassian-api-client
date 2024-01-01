@@ -1,0 +1,10 @@
+{
+  "start": 0,
+  "limit": 25,
+  "results": [
+    {
+      "name": "bamboo-admin",
+      "editable": true
+    }
+  ]
+}

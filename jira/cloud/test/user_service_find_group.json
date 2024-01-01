@@ -1,0 +1,24 @@
+{
+  "header": "Showing 2 of 2 matching groups",
+  "total": 2,
+  "groups": [
+    {
+      "name": "jira-admins-mobilesolutionworks",
+      "html": "<b>jira-admins-mobilesolutionworks</b>",
+      "labels": [
+        {
+          "text": "Admin",
+          "title": "Users added to this group will be given administrative access",
+          "type": "ADMIN"
+        }
+      ],
+      "groupId": "2eeab65d-ab39-4eee-965b-fd2a8bed9d12"
+    },
+    {
+      "name": "jira-admins-mobilesolutionworks-test",
+      "html": "<b>jira-admins-mobilesolutionworks</b>-test",
+      "labels": [],
+      "groupId": "1e2182cb-dfda-42fb-8802-c6fd168e36df"
+    }
+  ]
+}

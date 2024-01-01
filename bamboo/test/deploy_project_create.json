@@ -1,0 +1,13 @@
+{
+  "id": 1,
+  "key": {
+    "key": "1"
+  },
+  "name": "name",
+  "planKey": {
+    "key": "BUILD-PLAN"
+  },
+  "description": "description",
+  "environments": [],
+  "repositorySpecsManaged": false
+}
