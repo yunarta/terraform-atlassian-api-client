@@ -51,8 +51,8 @@ func (service *ActorLookupService) RegisterUsernames(username ...string) {
 
 	for _, user := range takeUsers {
 		go func(user string) {
-			readUser, err := service.actorService.ReadUser(user)
-			if err == nil {
+			readUser, _ := service.actorService.ReadUser(user)
+			if readUser != nil {
 				service.syncUser(readUser)
 			}
 			defer wg.Done()
@@ -66,8 +66,8 @@ func (service *ActorLookupService) FindUser(username string) string {
 	accountId, ok := service.usernames[username]
 	if !ok {
 		// the user is not in the system, so we fetch manually
-		readUser, err := service.actorService.ReadUser(username)
-		if err == nil {
+		readUser, _ := service.actorService.ReadUser(username)
+		if readUser != nil {
 			service.syncUser(readUser)
 		}
 
@@ -117,12 +117,12 @@ func (service *ActorLookupService) FindGroup(groupName string) string {
 	groupId, ok := service.groupNames[groupName]
 	if !ok {
 		// the user is not in the system, so we fetch manually
-		readUser, err := service.actorService.ReadGroup(groupName)
-		if err == nil {
-			service.syncGroup(readUser)
+		readGroup, _ := service.actorService.ReadGroup(groupName)
+		if readGroup != nil {
+			service.syncGroup(readGroup)
 		}
 
-		return readUser.GroupId
+		return readGroup.GroupId
 	} else {
 		return groupId
 	}
