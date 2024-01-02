@@ -4,16 +4,10 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
-github.com/yunarta/golang-quality-of-life-pack v0.0.0-20231228185001-dba630e5dfa5 h1:D+YLqPh47F+t2lRds3668TlSMyz+SS41WsekuF6o8rM=
-github.com/yunarta/golang-quality-of-life-pack v0.0.0-20231228185001-dba630e5dfa5/go.mod h1:Qw+9tWyqPJxxHLyuxCo5xCNwmfG/TMOt8Vkfq0bl9TU=
 github.com/yunarta/golang-quality-of-life-pack v0.0.0-20240101164849-4e279c0b0039 h1:8ad+CZ1+oa9R1l/+GTbWdJrKDOcVyZhzi7F6Rh7Trsk=
 github.com/yunarta/golang-quality-of-life-pack v0.0.0-20240101164849-4e279c0b0039/go.mod h1:Qw+9tWyqPJxxHLyuxCo5xCNwmfG/TMOt8Vkfq0bl9TU=
-github.com/yunarta/terraform-api-transport v0.0.0-20231228065212-689bf0b84632 h1:DgACB4j2ZSQ0v+Yu6Vs3Wu2Hen3cp9yFPWj3xXPVjs8=
-github.com/yunarta/terraform-api-transport v0.0.0-20231228065212-689bf0b84632/go.mod h1:KCRrG4fBwMob0+dhyhgZm6ZEsJTk3BmAwjcVlSeq4I0=
 github.com/yunarta/terraform-api-transport v0.0.0-20240101164309-e1b7ab147384 h1:LLxtuB+A/GV0m6C3K08EFcT7gdQNxDvTVvOwS62/cFs=
 github.com/yunarta/terraform-api-transport v0.0.0-20240101164309-e1b7ab147384/go.mod h1:KCRrG4fBwMob0+dhyhgZm6ZEsJTk3BmAwjcVlSeq4I0=
-github.com/yunarta/terraform-api-transport v1.0.0 h1:7Zp9FiZm4QG8hIPj/odCVjaqXfRzH2M7uVrip+SFWwI=
-github.com/yunarta/terraform-api-transport v1.0.0/go.mod h1:KCRrG4fBwMob0+dhyhgZm6ZEsJTk3BmAwjcVlSeq4I0=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v3 v3.0.1 h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=
