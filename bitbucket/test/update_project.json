@@ -1,0 +1,15 @@
+{
+  "key": "KEY",
+  "id": 42,
+  "name": "NAME-UPDATED",
+  "description": "DESCRIPTION-UPDATED",
+  "public": false,
+  "type": "NORMAL",
+  "links": {
+    "self": [
+      {
+        "href": "https://bitbucket.funf/bitbucket/projects/KEY"
+      }
+    ]
+  }
+}

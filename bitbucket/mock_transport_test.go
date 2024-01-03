@@ -9,6 +9,18 @@ import (
 func MockPayloadTransporter() *transport.MockPayloadTransport {
 	return &transport.MockPayloadTransport{
 		Payloads: map[string]transport.PayloadResponse{
+			"POST:/rest/api/latest/projects": {
+				StatusCode: 201,
+				Body:       readFile("create_project.json"),
+			},
+			"GET:/rest/api/latest/projects/KEY": {
+				StatusCode: 200,
+				Body:       readFile("create_project.json"),
+			},
+			"PUT:/rest/api/latest/projects/KEY": {
+				StatusCode: 200,
+				Body:       readFile("update_project.json"),
+			},
 			// project permissions
 			"GET:/rest/api/latest/projects/A/permissions/users?limit=1000": {
 				StatusCode: 200,
