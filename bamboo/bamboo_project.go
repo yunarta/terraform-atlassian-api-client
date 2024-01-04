@@ -9,6 +9,13 @@ type CreateProject struct {
 	PublicAccess bool   `json:"publicAccess,omitempty"`
 }
 
+// UpdateProject is a structure that holds information needed to update an existing Bamboo project.
+// This includes properties like Name and Description.
+type UpdateProject struct {
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
 // Project is a structure representing a Bamboo project as returned by the API.
 // This includes properties like Key, Name, and Description.
 type Project struct {

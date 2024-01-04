@@ -11,7 +11,7 @@ func TestProjectService_CreateProject(t *testing.T) {
 	transporter := MockPayloadTransporter()
 	var client = NewBambooClient(transporter)
 
-	project, err := client.ProjectService().CreateProject(CreateProject{
+	project, err := client.ProjectService().Create(CreateProject{
 		Name:         "name",
 		Key:          "PROJECT",
 		Description:  "description",

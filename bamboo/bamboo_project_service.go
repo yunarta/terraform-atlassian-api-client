@@ -14,9 +14,9 @@ type ProjectService struct {
 	transport transport.PayloadTransport
 }
 
-// The CreateProject function allows us to create a new project in Bamboo.
+// The Create function allows us to create a new project in Bamboo.
 // It receives project data as input and returns the newly created project if everything goes okay.
-func (service *ProjectService) CreateProject(request CreateProject) (*CreateProject, error) {
+func (service *ProjectService) Create(request CreateProject) (*Project, error) {
 	// We send a POST request to create a new project. A 201 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method:  http.MethodPost,
@@ -28,8 +28,8 @@ func (service *ProjectService) CreateProject(request CreateProject) (*CreateProj
 		return nil, err
 	}
 
-	response := CreateProject{}
-	// We parse the return data into a CreateProject struct.
+	response := Project{}
+	// We parse the return data into a Create struct.
 	err = reply.Object(&response)
 	if err != nil {
 		// If parsing fails, we return the error.
@@ -62,6 +62,56 @@ func (service *ProjectService) Read(projectKey string) (*Project, error) {
 
 	// If everything works as it should, we return the fetched project.
 	return &response, nil
+}
+
+// ProjectService struct should already be defined somewhere. It handles the operations related to the Project.
+
+// Update is a method on the ProjectService struct. It sends a PUT request to update the project.
+// projectKey is a unique identifier for a project and update is the data that needs to be updated.
+// The function will return the updated project or any error occurred during the process.
+func (service *ProjectService) Update(projectKey string, update UpdateProject) (*Project, error) {
+	// The SendWithExpectedStatus method of the transport field on the service struct is called.
+	// This method is used to send requests with a specific expected HTTP status code (200 in this case, which means Success).
+	// The method, URL, and payload for the request are provided.
+	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPut,
+		Url:    fmt.Sprintf("/rest/api/latest/project/%s", projectKey),
+		Payload: transport.JsonPayloadData{
+			Payload: update,
+		},
+	}, 200)
+
+	// If there's a communication error (network issues, server not responding, etc.), it gets returned immediately.
+	if err != nil {
+		return nil, err
+	}
+
+	// Create an empty Project struct to hold the response.
+	response := Project{}
+
+	// The Object method is called on reply to parse the response body into the Project struct.
+	err = reply.Object(&response)
+	if err != nil {
+		// If there's a parsing error (e.g., the server responded with unexpected data), it gets returned immediately.
+		return nil, err
+	}
+
+	// Return the updated project along with nil as the error, indicating success.
+	return &response, nil
+}
+
+// Delete is another method on ProjectService. It sends a DELETE request to delete the project specified by the provided projectKey.
+// It returns error (if any) that occurred during the deletion.
+func (service *ProjectService) Delete(projectKey string) error {
+	// The SendWithExpectedStatus function on the service's transport struct sends a DELETE request. It expects a 204 status code response.
+	// 204 indicates that the server successfully processed the request and there's no additional content to send in the response payload.
+	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodDelete,
+		Url:    fmt.Sprintf("/rest/api/latest/project/%s", projectKey),
+	}, 204)
+
+	// Return the error (if any). If the function call was successful the error will be nil.
+	return err
 }
 
 // The ReadPlan function fetches the details of a plan given its key.
