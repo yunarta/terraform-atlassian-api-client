@@ -11,9 +11,30 @@ type SpacePermissionsService struct {
 	transport transport.PayloadTransport
 }
 
-func (service *SpacePermissionsService) GetPermissions(spaceId int64) (*[]confluence.SpacePermission, error) {
+func (service *SpacePermissionsService) Create(spaceKey string, request confluence.AddPermission) (*confluence.Permission, error) {
+	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    fmt.Sprintf("/wiki/rest/api/space/%s/permission", spaceKey),
+		Payload: transport.JsonPayloadData{
+			Payload: request,
+		},
+	}, 200)
+	if err != nil {
+		return nil, err
+	}
+
+	permission := confluence.Permission{}
+	err = reply.Object(&permission)
+	if err != nil {
+		return nil, err
+	}
+
+	return &permission, err
+}
+
+func (service *SpacePermissionsService) Read(spaceId int64) (*[]confluence.PermissionV2, error) {
 	url := fmt.Sprintf("/wiki/api/v2/spaces/%d/permissions", spaceId)
-	var permissions = make([]confluence.SpacePermission, 0)
+	var permissions = make([]confluence.PermissionV2, 0)
 	for {
 		reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 			Method: http.MethodGet,
@@ -23,7 +44,7 @@ func (service *SpacePermissionsService) GetPermissions(spaceId int64) (*[]conflu
 			return nil, err
 		}
 
-		response := confluence.SpacePermissionResponse{}
+		response := spacePermissionResponse{}
 		err = reply.Object(&response)
 		if err != nil {
 			return nil, err
@@ -40,31 +61,10 @@ func (service *SpacePermissionsService) GetPermissions(spaceId int64) (*[]conflu
 	return &permissions, nil
 }
 
-func (service *SpacePermissionsService) AddPermission(spaceKey string, request confluence.AddPermissionRequest) (*confluence.SpacePermission, error) {
-	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
-		Method: http.MethodPost,
-		Url:    fmt.Sprintf("/wiki/rest/api/space/%s/permission", spaceKey),
-		Payload: transport.JsonPayloadData{
-			Payload: request,
-		},
-	}, 200)
-	if err != nil {
-		return nil, err
-	}
-
-	space := confluence.SpacePermission{}
-	err = reply.Object(&space)
-	if err != nil {
-		return nil, err
-	}
-
-	return &space, err
-}
-
-func (service *SpacePermissionsService) RemovePermission(spaceKey string, request string) error {
+func (service *SpacePermissionsService) Delete(spaceKey string, permissionID string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/wiki/rest/api/space/%s/permission/%s", spaceKey, request),
+		Url:    fmt.Sprintf("/wiki/rest/api/space/%s/permission/%s", spaceKey, permissionID),
 	}, 204)
 	return err
 }

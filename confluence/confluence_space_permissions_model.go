@@ -6,37 +6,37 @@ import (
 )
 
 const (
-	PrincipalTypeUser  = "user"
-	PrincipalTypeGroup = "group"
-	PrincipalTypeRole  = "role"
+	PrincipalUser  = "user"
+	PrincipalGroup = "group"
+	PrincipalRole  = "role"
 )
 
-type SpacePermissionSubject struct {
+type Subject struct {
 	Type string `json:"type,omitempty"`
 	Id   string `json:"identifier,omitempty"`
 }
 
-type SpacePermissionPrincipal struct {
+type Principal struct {
 	Type string `json:"type,omitempty"`
 	Id   string `json:"id,omitempty"`
 }
 
 const (
-	OperationUse             = "use"
-	OperationCreate          = "create"
-	OperationRead            = "read"
-	OperationUpdate          = "update"
-	OperationDelete          = "delete"
-	OperationCopy            = "copy"
-	OperationMove            = "move"
-	OperationExport          = "export"
-	OperationPurge           = "purge"
-	OperationPurgeVersion    = "purge_version"
-	OperationAdminister      = "administer"
-	OperationRestore         = "restore"
-	OperationCreateSpace     = "create_space"
-	OperationRestrictContent = "restrict_content"
-	OperationArchive         = "archive"
+	OpUse             = "use"
+	OpCreate          = "create"
+	OpRead            = "read"
+	OpUpdate          = "update"
+	OpDelete          = "delete"
+	OpCopy            = "copy"
+	OpMove            = "move"
+	OpExport          = "export"
+	OpPurge           = "purge"
+	OpPurgeVersion    = "purge_version"
+	OpAdminister      = "administer"
+	OpRestore         = "restore"
+	OpCreateSpace     = "create_space"
+	OpRestrictContent = "restrict_content"
+	OpArchive         = "archive"
 )
 
 const (
@@ -74,38 +74,44 @@ func SortOperation(a, b string) int {
 	return 0
 }
 
-type SpacePermissionOperation struct {
-	Key    string `json:"key,omitempty"`
-	Target string `json:"targetType,omitempty"`
-}
-
-type SpacePermissionOperation2 struct {
+type Operation struct {
 	Key    string `json:"key,omitempty"`
 	Target string `json:"target,omitempty"`
 }
 
-func (o SpacePermissionOperation) ToSlug() string {
-	return fmt.Sprintf("%s_%s", o.Key, o.Target)
+func (operation Operation) GetSlug() string {
+	return fmt.Sprintf("%s_%s", operation.Key, operation.Target)
 }
 
-type SpacePermission struct {
-	Id        string                   `json:"id,omitempty"`
-	Principal SpacePermissionPrincipal `json:"principal,omitempty"`
-	Operation SpacePermissionOperation `json:"operation,omitempty"`
+type OperationV2 struct {
+	Key    string `json:"key,omitempty"`
+	Target string `json:"targetType,omitempty"`
 }
 
-type Links struct {
-	Next string `json:"next,omitempty"`
+func (operation OperationV2) GetSlug() string {
+	return fmt.Sprintf("%s_%s", operation.Key, operation.Target)
 }
 
-type SpacePermissionResponse struct {
-	Results []SpacePermission `json:"results,omitempty"`
-	Links   *Links            `json:"_links,omitempty"`
+type AddOperation struct {
+	Key    string `json:"key,omitempty"`
+	Target string `json:"target,omitempty"`
 }
 
-type AddPermissionRequest struct {
-	Subject   SpacePermissionSubject    `json:"subject,omitempty"`
-	Operation SpacePermissionOperation2 `json:"operation,omitempty"`
+type AddPermission struct {
+	Subject   Subject      `json:"subject,omitempty"`
+	Operation AddOperation `json:"operation,omitempty"`
+}
+
+type Permission struct {
+	Id        int64     `json:"id,omitempty"`
+	Subject   Subject   `json:"subject,omitempty"`
+	Operation Operation `json:"operation,omitempty"`
+}
+
+type PermissionV2 struct {
+	Id        string      `json:"id,omitempty"`
+	Principal Principal   `json:"principal,omitempty"`
+	Operation OperationV2 `json:"operation,omitempty"`
 }
 
 type ObjectPermissions struct {
@@ -113,8 +119,8 @@ type ObjectPermissions struct {
 	Users  []UserPermissions
 }
 
-func (r ObjectPermissions) FindUser(accountId string) *UserPermissions {
-	for _, user := range r.Users {
+func (op ObjectPermissions) FindUser(accountId string) *UserPermissions {
+	for _, user := range op.Users {
 		if user.AccountId == accountId {
 			return &user
 		}
@@ -123,8 +129,8 @@ func (r ObjectPermissions) FindUser(accountId string) *UserPermissions {
 	return nil
 }
 
-func (r ObjectPermissions) FindGroup(groupId string) *GroupPermissions {
-	for _, group := range r.Groups {
+func (op ObjectPermissions) FindGroup(groupId string) *GroupPermissions {
+	for _, group := range op.Groups {
 		if group.AccountId == groupId {
 			return &group
 		}
@@ -139,8 +145,8 @@ type GroupPermissions struct {
 	Permissions []string
 }
 
-func (r GroupPermissions) DeltaPermissions(newPermissions []string) (adding []string, removing []string) {
-	return collections.Delta(r.Permissions, newPermissions)
+func (g GroupPermissions) DeltaPermissions(newPermissions []string) (adding []string, removing []string) {
+	return collections.Delta(g.Permissions, newPermissions)
 }
 
 type UserPermissions struct {
@@ -149,6 +155,6 @@ type UserPermissions struct {
 	Permissions []string
 }
 
-func (r UserPermissions) DeltaPermissions(newPermissions []string) (adding []string, removing []string) {
-	return collections.Delta(r.Permissions, newPermissions)
+func (u UserPermissions) DeltaPermissions(newPermissions []string) (adding []string, removing []string) {
+	return collections.Delta(u.Permissions, newPermissions)
 }

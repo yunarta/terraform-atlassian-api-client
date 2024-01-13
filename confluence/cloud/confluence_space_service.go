@@ -11,7 +11,7 @@ type SpaceService struct {
 	transport transport.PayloadTransport
 }
 
-func (service *SpaceService) Create(request confluence.CreateSpaceRequest) (*confluence.Space, error) {
+func (service *SpaceService) Create(request confluence.CreateSpace) (*confluence.Space, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
 		Url:    "/wiki/rest/api/space",
@@ -32,16 +32,16 @@ func (service *SpaceService) Create(request confluence.CreateSpaceRequest) (*con
 	return &space, err
 }
 
-func (service *SpaceService) Get(spaceKey string) (*confluence.Space, error) {
+func (service *SpaceService) Read(spaceKey string) (*confluence.Space, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/wiki/rest/api/space?spaceKey=%s&limit=1", spaceKey),
+		Url:    fmt.Sprintf("/wiki/rest/api/space?spaceKey=%s&limit=1&expand=description.plain", spaceKey),
 	}, 200)
 	if err != nil {
 		return nil, err
 	}
 
-	space := confluence.GetSpacesResponse{}
+	space := getSpacesResponse{}
 	err = reply.Object(&space)
 	if err != nil {
 		return nil, err
@@ -52,6 +52,27 @@ func (service *SpaceService) Get(spaceKey string) (*confluence.Space, error) {
 	}
 
 	return &space.Results[0], err
+}
+
+func (service *SpaceService) Update(spaceKey string, request confluence.UpdateSpace) (*confluence.Space, error) {
+	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPut,
+		Url:    fmt.Sprintf("/wiki/rest/api/space/%s", spaceKey),
+		Payload: transport.JsonPayloadData{
+			Payload: request,
+		},
+	}, 200)
+	if err != nil {
+		return nil, err
+	}
+
+	space := confluence.Space{}
+	err = reply.Object(&space)
+	if err != nil {
+		return nil, err
+	}
+
+	return &space, err
 }
 
 func (service *SpaceService) Delete(spaceKey string) error {

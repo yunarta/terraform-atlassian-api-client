@@ -1,0 +1,15 @@
+{
+  "id": 3670025,
+  "operation": {
+    "key": "create",
+    "target": "page"
+  },
+  "subject": {
+    "type": "user",
+    "identifier": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+  },
+  "_links": {
+    "base": "https://mobilesolutionworks.atlassian.net/wiki",
+    "context": "/wiki"
+  }
+}

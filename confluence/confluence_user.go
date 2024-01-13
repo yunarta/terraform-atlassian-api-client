@@ -7,7 +7,3 @@ type User struct {
 	PublicName  string `json:"publicName,omitempty"`
 	DisplayName string `json:"displayName,omitempty"`
 }
-
-type SearchUserResponse struct {
-	Results []User `json:"results,omitempty"`
-}
