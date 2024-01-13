@@ -1,0 +1,260 @@
+{
+  "results": [
+    {
+      "id": "3670097",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "archive",
+        "targetType": "page"
+      }
+    },
+    {
+      "id": "3735797",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "read",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3768332",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "restrict_content",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3768333",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "create",
+        "targetType": "attachment"
+      }
+    },
+    {
+      "id": "3768345",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "create",
+        "targetType": "blogpost"
+      }
+    },
+    {
+      "id": "3768352",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "export",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3768356",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "blogpost"
+      }
+    },
+    {
+      "id": "3768362",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "page"
+      }
+    },
+    {
+      "id": "3768368",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "create",
+        "targetType": "page"
+      }
+    },
+    {
+      "id": "3768375",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "read",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3768377",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "create",
+        "targetType": "comment"
+      }
+    },
+    {
+      "id": "3768386",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "comment"
+      }
+    },
+    {
+      "id": "3768387",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "attachment"
+      }
+    },
+    {
+      "id": "3768389",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "administer",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3768390",
+      "principal": {
+        "type": "group",
+        "id": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3932454",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "create",
+        "targetType": "blogpost"
+      }
+    },
+    {
+      "id": "3932460",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "create",
+        "targetType": "attachment"
+      }
+    },
+    {
+      "id": "3932472",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "blogpost"
+      }
+    },
+    {
+      "id": "3932484",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "archive",
+        "targetType": "page"
+      }
+    },
+    {
+      "id": "3932490",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3932496",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "export",
+        "targetType": "space"
+      }
+    },
+    {
+      "id": "3932508",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "delete",
+        "targetType": "attachment"
+      }
+    },
+    {
+      "id": "3932514",
+      "principal": {
+        "type": "user",
+        "id": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
+      },
+      "operation": {
+        "key": "restrict_content",
+        "targetType": "space"
+      }
+    }
+  ],
+  "_links": {
+    "next": "/wiki/api/v2/spaces/3768323/permissions?cursor=eyJpZCI6MzkzMjUxNCwic3BhY2VQZXJtaXNzaW9uU29ydE9yZGVyIjp7ImZpZWxkIjoiSUQiLCJkaXJlY3Rpb24iOiJBU0NFTkRJTkcifSwic3BhY2VQZXJtaXNzaW9uU29ydE9yZGVyVmFsdWUiOjM5MzI1MTR9"
+  }
+}

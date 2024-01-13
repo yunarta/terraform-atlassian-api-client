@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+const (
+	projectsEndpoint = "/rest/api/latest/projects"
+	projectEndpoint  = "/rest/api/latest/projects/%s"
+)
+
 // ProjectService struct represents a project service
 type ProjectService struct {
 	transport transport.PayloadTransport
@@ -16,7 +21,7 @@ func (service *ProjectService) Create(create CreateProject) (*Project, error) {
 	// Sending a POST request to create a project
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
-		Url:    "/rest/api/latest/projects",
+		Url:    projectsEndpoint,
 		Payload: &transport.JsonPayloadData{
 			Payload: create,
 		},
@@ -41,7 +46,7 @@ func (service *ProjectService) Read(key string) (*Project, error) {
 	// Sending a GET request to read a project
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s", key),
+		Url:    fmt.Sprintf(projectEndpoint, key),
 	}, 200)
 
 	if err != nil {
@@ -62,7 +67,7 @@ func (service *ProjectService) Read(key string) (*Project, error) {
 func (service *ProjectService) Delete(key string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s", key),
+		Url:    fmt.Sprintf(projectEndpoint, key),
 	}, 204)
 
 	// We just return the result of the delete command.
@@ -74,7 +79,7 @@ func (service *ProjectService) Update(key string, update ProjectUpdate) (*Projec
 	// Sending a GET request to update a project
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s", key),
+		Url:    fmt.Sprintf(projectEndpoint, key),
 		Payload: transport.JsonPayloadData{
 			Payload: update,
 		},

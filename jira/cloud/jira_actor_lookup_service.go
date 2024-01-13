@@ -77,6 +77,21 @@ func (service *ActorLookupService) FindUser(username string) string {
 	}
 }
 
+func (service *ActorLookupService) FindUserById(accountId string) string {
+	username, ok := service.accountIds[accountId]
+	if !ok {
+		// the user is not in the system, so we fetch manually
+		users, _ := service.actorService.BulkGetGroupsById([]string{accountId})
+		for _, user := range users {
+			service.syncGroup(&user)
+		}
+
+		return users[0].Name
+	} else {
+		return username
+	}
+}
+
 func (service *ActorLookupService) syncUser(user *jira.User) {
 	service.Mutex.Lock()
 	username := util.CoalesceString(user.EmailAddress, user.DisplayName)
@@ -125,6 +140,21 @@ func (service *ActorLookupService) FindGroup(groupName string) string {
 		return readGroup.GroupId
 	} else {
 		return groupId
+	}
+}
+
+func (service *ActorLookupService) FindGroupById(groupId string) string {
+	groupName, ok := service.groupIds[groupId]
+	if !ok {
+		// the user is not in the system, so we fetch manually
+		groups, _ := service.actorService.BulkGetGroupsById([]string{groupId})
+		for _, group := range groups {
+			service.syncGroup(&group)
+		}
+
+		return groups[0].Name
+	} else {
+		return groupName
 	}
 }
 

@@ -6,6 +6,14 @@ import (
 	"net/http"
 )
 
+const (
+	projectsEndPoint         = "/rest/api/latest/project"
+	projectEndpoint          = "/rest/api/latest/project/%s"
+	planEndPoint             = "/rest/api/latest/plan/%s"
+	specRepositoriesEndPoint = "/rest/api/latest/project/%s/repository"
+	specRepositoryEndPoint   = "/rest/api/latest/project/%s/repository/%d"
+)
+
 // ProjectService is a key struct in this package.
 // This struct holds a client that sends HTTP requests and receives HTTP responses.
 // We will use instances of ProjectService to perform operations on Bamboo servers.
@@ -20,7 +28,7 @@ func (service *ProjectService) Create(request CreateProject) (*Project, error) {
 	// We send a POST request to create a new project. A 201 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method:  http.MethodPost,
-		Url:     "/rest/api/latest/project",
+		Url:     projectsEndPoint,
 		Payload: transport.JsonPayloadData{Payload: request},
 	}, 201)
 	// If there's a communication error, we return it immediately.
@@ -45,7 +53,7 @@ func (service *ProjectService) Read(projectKey string) (*Project, error) {
 	// We send a GET request to fetch the project. A 200 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s", projectKey),
+		Url:    fmt.Sprintf(projectEndpoint, projectKey),
 	}, 200)
 	// If there's a communication error, we return it immediately.
 	if err != nil {
@@ -75,7 +83,7 @@ func (service *ProjectService) Update(projectKey string, update UpdateProject) (
 	// The method, URL, and payload for the request are provided.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s", projectKey),
+		Url:    fmt.Sprintf(projectEndpoint, projectKey),
 		Payload: transport.JsonPayloadData{
 			Payload: update,
 		},
@@ -107,7 +115,7 @@ func (service *ProjectService) Delete(projectKey string) error {
 	// 204 indicates that the server successfully processed the request and there's no additional content to send in the response payload.
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s", projectKey),
+		Url:    fmt.Sprintf(projectEndpoint, projectKey),
 	}, 204)
 
 	// Return the error (if any). If the function call was successful the error will be nil.
@@ -120,7 +128,7 @@ func (service *ProjectService) ReadPlan(planKey string) (*Plan, error) {
 	// We send a GET request to fetch the plan. A 200 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/plan/%s", planKey),
+		Url:    fmt.Sprintf(planEndPoint, planKey),
 	}, 200)
 	// If there's a communication error, we return it immediately.
 	if err != nil {
@@ -145,7 +153,7 @@ func (service *ProjectService) GetSpecRepositories(projectKey string) ([]Reposit
 	// We send a GET request to fetch the repositories for a project. A 200 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/repository", projectKey),
+		Url:    fmt.Sprintf(specRepositoriesEndPoint, projectKey),
 	}, 200)
 	// If there's a communication error, we return it immediately.
 	if err != nil {
@@ -170,7 +178,7 @@ func (service *ProjectService) AddSpecRepositories(projectKey string, repository
 	// We send a POST request to add a new repository to a project. A 201 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/repository", projectKey),
+		Url:    fmt.Sprintf(specRepositoriesEndPoint, projectKey),
 		Payload: transport.JsonPayloadData{
 			Payload: map[string]int{
 				"id": repositoryId,
@@ -200,7 +208,7 @@ func (service *ProjectService) RemoveSpecRepositories(projectKey string, reposit
 	// We send a DELETE request to remove a repository from a project. A 204 status code signifies success.
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/repository/%d", projectKey, repositoryId),
+		Url:    fmt.Sprintf(specRepositoryEndPoint, projectKey, repositoryId),
 	}, 204)
 	// If there's a communication error, we return it immediately.
 	return err

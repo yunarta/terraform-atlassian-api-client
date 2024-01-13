@@ -1,0 +1,15 @@
+https://mobilesolutionworks.atlassian.net/rest/projects/1.0/project/TPXA/shortcut
+[
+    {
+        "id": "1",
+        "name": "Nexus",
+        "url": "https://nxrm.funf/",
+        "icon": "",
+        "type": "project.shortcut.default.link",
+        "isPendingApproval": false,
+        "dvcsType": "unknown"
+    }
+]
+
+Create shortcut
+{"name":"Nexus","url":"https://nxrm.funf/","icon":"","type":"project.shortcut.default.link"}

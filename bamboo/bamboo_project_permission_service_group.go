@@ -53,7 +53,7 @@ func (service *ProjectService) readGroupPermissions(projectKey string, groupName
 			permissions[item.Name] = item
 		}
 
-		// Get the permission, update it and put it back into the map.
+		// Read the permission, update it and put it back into the map.
 		permission := permissions[item.Name]
 		permission.Permissions = collections.Unique(append(permission.Permissions, item.Permissions...))
 		permissions[item.Name] = permission

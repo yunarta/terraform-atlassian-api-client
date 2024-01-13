@@ -13,6 +13,10 @@ type ActorService struct {
 	transport transport.PayloadTransport
 }
 
+func NewActorService(transport transport.PayloadTransport) *ActorService {
+	return &ActorService{transport: transport}
+}
+
 func (service *ActorService) ReadUser(emailAddress string) (*jira.User, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,

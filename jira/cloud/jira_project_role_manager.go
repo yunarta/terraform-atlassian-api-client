@@ -244,6 +244,7 @@ func (manager *OptimizedProjectRoleService) Finalized() {
 				changeReq.addingGroups,
 			)
 		}
+
 		if len(changeReq.removingUsers) > 0 || len(changeReq.removingGroups) > 0 {
 			_ = projectRoleService.RemoveProjectRole(
 				manager.projectIdOrKey,
