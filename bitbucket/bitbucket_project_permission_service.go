@@ -113,23 +113,14 @@ func (service *ProjectService) UpdateGroupPermission(projectKey string, groupNam
 	if group != nil {
 		if len(newPermission) > 0 {
 			err = service.addGroupPermission(projectKey, groupName, newPermission)
-			if err != nil {
-				return err
-			}
 		} else {
 			err = service.removeGroupPermission(projectKey, groupName)
-			if err != nil {
-				return err
-			}
 		}
 	} else {
 		err = service.addGroupPermission(projectKey, groupName, newPermission)
-		if err != nil {
-			return err
-		}
 	}
 
-	return nil
+	return err
 }
 
 func (service *ProjectService) UpdateUserPermission(projectKey string, username string, newPermission string) error {
@@ -142,21 +133,12 @@ func (service *ProjectService) UpdateUserPermission(projectKey string, username 
 	if user != nil {
 		if len(newPermission) > 0 {
 			err = service.addUserPermission(projectKey, username, newPermission)
-			if err != nil {
-				return err
-			}
 		} else {
 			err = service.removeUserPermission(projectKey, username)
-			if err != nil {
-				return err
-			}
 		}
 	} else if len(newPermission) > 0 {
 		err = service.addUserPermission(projectKey, username, newPermission)
-		if err != nil {
-			return err
-		}
 	}
 
-	return nil
+	return err
 }
