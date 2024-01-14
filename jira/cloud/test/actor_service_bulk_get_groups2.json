@@ -1,0 +1,12 @@
+{
+  "maxResults": 50,
+  "startAt": 0,
+  "total": 1,
+  "isLast": true,
+  "values": [
+    {
+      "name": "site-admins",
+      "groupId": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
+    }
+  ]
+}
