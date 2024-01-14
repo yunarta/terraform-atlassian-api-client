@@ -32,11 +32,13 @@ func (service *ActorService) ReadUser(emailAddress string) (*jira.User, error) {
 		return nil, err
 	}
 
-	if len(users) > 0 {
-		return &users[0], nil
-	} else {
-		return nil, nil
+	for _, user := range users {
+		if user.EmailAddress == emailAddress {
+			return &user, nil
+		}
 	}
+
+	return nil, nil
 }
 
 func (service *ActorService) ReadGroup(name string) (*jira.Group, error) {
@@ -54,11 +56,13 @@ func (service *ActorService) ReadGroup(name string) (*jira.Group, error) {
 		return nil, err
 	}
 
-	if len(response.Groups) > 0 {
-		return &response.Groups[0], nil
-	} else {
-		return nil, nil
+	for _, group := range response.Groups {
+		if group.Name == name {
+			return &group, nil
+		}
 	}
+
+	return nil, nil
 }
 
 func (service *ActorService) BulkGetUsers(accountIds []string) ([]jira.User, error) {

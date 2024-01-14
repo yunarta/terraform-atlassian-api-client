@@ -85,16 +85,6 @@ func (service *ProjectRoleService) ReadProjectRoleActors(projectIdOrKey string, 
 
 func (service *ProjectRoleService) AddProjectRole(projectIdOrKey string, roleID string, userAccountIds []string, groupIds []string) error {
 	var err error
-	//
-	//actors, err := service.ReadProjectRoleActors(projectIdOrKey, roleID)
-	//if err != nil {
-	//	return false, err
-	//}
-	//
-	//existingUsers, existingGroups := service.computeRoleActors(actors)
-	//
-	//matchingUsers, _ := collections.Delta(existingUsers, userAccountIds)
-	//matchingGroups, _ := collections.Delta(existingGroups, groupIds)
 
 	if len(userAccountIds) > 0 || len(groupIds) > 0 {
 		_, err = service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
@@ -117,16 +107,6 @@ func (service *ProjectRoleService) AddProjectRole(projectIdOrKey string, roleID 
 
 func (service *ProjectRoleService) RemoveProjectRole(projectIdOrKey string, roleID string, userAccountIds []string, groupIds []string) error {
 	var err error
-	//
-	//actors, err := service.ReadProjectRoleActors(projectIdOrKey, roleID)
-	//if err != nil {
-	//	return false, err
-	//}
-	//
-	//existingUsers, existingGroups := service.computeRoleActors(actors)
-	//
-	//matchingUsers := collections.Intersect(existingUsers, userAccountIds)
-	//matchingGroups := collections.Intersect(existingGroups, groupIds)
 
 	var queries = make([]string, 0)
 	queries = append(queries, collections.Map(userAccountIds, func(k string) string {
@@ -150,48 +130,3 @@ func (service *ProjectRoleService) RemoveProjectRole(projectIdOrKey string, role
 
 	return nil
 }
-
-func (service *ProjectRoleService) computeRoleActors(actors []jira.Actor) (users []string, groups []string) {
-	var existingUsers = make([]string, 0)
-	var existingGroups = make([]string, 0)
-
-	for _, actor := range actors {
-		switch actor.Type {
-		case "atlassian-user-role-actor":
-			existingUsers = append(existingUsers, actor.ActorUser.AccountID)
-			break
-		case "atlassian-group-role-actor":
-			existingGroups = append(existingGroups, actor.ActorGroup.GroupId)
-			break
-		}
-	}
-	return existingUsers, existingGroups
-}
-
-//func (service *ProjectRoleService) UpdateProjectGroupRole(projectIdOrKey string, roleID string, groupId []string) error {
-//	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
-//		Method: http.MethodPost,
-//		Url:    fmt.Sprintf("/rest/api/latest/project/%s/role/%s", projectIdOrKey, roleID),
-//		Payload: transport.JsonPayloadData{
-//			Payload: map[string][]string{
-//				"groupId": groupId,
-//			},
-//		},
-//	}, 200, 400)
-//
-//	return err
-//}
-
-//func (service *ProjectRoleService) UpdateProjectUserRole(projectIdOrKey string, roleID string, userAccountId []string) error {
-//	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
-//		Method: http.MethodPost,
-//		Url:    fmt.Sprintf("/rest/api/latest/project/%s/role/%s", projectIdOrKey, roleID),
-//		Payload: transport.JsonPayloadData{
-//			Payload: map[string][]string{
-//				"user": userAccountId,
-//			},
-//		},
-//	}, 200, 400)
-//
-//	return err
-//}

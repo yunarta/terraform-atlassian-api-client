@@ -19,6 +19,12 @@
       "html": "<b>jira-admins-mobilesolutionworks</b>-test",
       "labels": [],
       "groupId": "1e2182cb-dfda-42fb-8802-c6fd168e36df"
+    },
+    {
+      "name": "site-admins",
+      "html": "<b>site-admins</b>",
+      "labels": [],
+      "groupId": "94af0e5e-018a-422d-bffa-e41fc5b71d29"
     }
   ]
 }
