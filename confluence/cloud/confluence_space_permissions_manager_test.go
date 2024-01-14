@@ -27,7 +27,7 @@ func TestSpacePermissionsManager_UpdateUserPermission(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, permissions)
 
-	err = manager.UpdateUserRoles("yunarta.kartawahyudi@gmail.com", []string{
+	err = manager.UpdateUserPermissions("yunarta.kartawahyudi@gmail.com", []string{
 		fmt.Sprintf("%s_%s", confluence.OpRead, confluence.TargetSpace),
 		fmt.Sprintf("%s_%s", confluence.OpRead, confluence.TargetPage),
 		fmt.Sprintf("%s_%s", confluence.OpDelete, confluence.TargetPage),
@@ -42,7 +42,7 @@ func TestSpacePermissionsManager_UpdateGroupPermission(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, permissions)
 
-	err = manager.UpdateGroupRoles("site-admins", []string{
+	err = manager.UpdateGroupPermissions("site-admins", []string{
 		fmt.Sprintf("%s_%s", confluence.OpRead, confluence.TargetSpace),
 		fmt.Sprintf("%s_%s", confluence.OpRead, confluence.TargetPage),
 		fmt.Sprintf("%s_%s", confluence.OpDelete, confluence.TargetPage),
@@ -57,5 +57,5 @@ func TestSpacePermissionsManager_RemoveUserPermission(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, permissions)
 
-	err = manager.UpdateUserRoles("yunarta.kartawahyudi@gmail.com", []string{})
+	err = manager.UpdateUserPermissions("yunarta.kartawahyudi@gmail.com", []string{})
 }

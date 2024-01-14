@@ -64,7 +64,6 @@ func (service *ProjectService) Read(projectKey string) (*Project, error) {
 	// We parse the returned data into a Project struct.
 	err = reply.Object(&response)
 	if err != nil {
-		// If parsing fails, we return the error.
 		return nil, err
 	}
 

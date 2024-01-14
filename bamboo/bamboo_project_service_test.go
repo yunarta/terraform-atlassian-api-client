@@ -38,6 +38,33 @@ func TestProjectService_Read(t *testing.T) {
 	assert.Equal(t, "description", project.Description)
 }
 
+func TestProjectService_Update(t *testing.T) {
+	var err error
+
+	transporter := MockPayloadTransporter()
+	var client = NewBambooClient(transporter)
+
+	project, err := client.ProjectService().Update("PROJECT", UpdateProject{
+		Name:        "New Name",
+		Description: "New Description",
+	})
+
+	assert.Nil(t, err)
+	assert.Equal(t, "New Name", project.Name)
+	assert.Equal(t, "New Description", project.Description)
+}
+
+func TestProjectService_Delete(t *testing.T) {
+	var err error
+
+	transporter := MockPayloadTransporter()
+	var client = NewBambooClient(transporter)
+
+	err = client.ProjectService().Delete("PROJECT")
+
+	assert.Nil(t, err)
+}
+
 func TestProjectService_ReadPlan(t *testing.T) {
 	var err error
 

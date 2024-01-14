@@ -1,6 +1,7 @@
 package cloud
 
 import (
+	"fmt"
 	"github.com/yunarta/golang-quality-of-life-pack/collections"
 	"github.com/yunarta/terraform-atlassian-api-client/jira"
 )
@@ -18,8 +19,8 @@ const (
 	roleRemoving
 )
 
-// OptimizedProjectRoleService manages project roles within a Jira project.
-type OptimizedProjectRoleService struct {
+// ProjectRoleManage manages project roles within a Jira project.
+type ProjectRoleManage struct {
 	client         *JiraClient
 	projectIdOrKey string
 	ReadOnly       bool
@@ -48,9 +49,9 @@ func newRoleChangeRequest() *roleChangeRequest {
 	}
 }
 
-// NewProjectRoleManager creates a new instance of OptimizedProjectRoleService.
-func NewProjectRoleManager(client *JiraClient, projectIdOrKey string) *OptimizedProjectRoleService {
-	return &OptimizedProjectRoleService{
+// NewProjectRoleManager creates a new instance of ProjectRoleManage.
+func NewProjectRoleManager(client *JiraClient, projectIdOrKey string) *ProjectRoleManage {
+	return &ProjectRoleManage{
 		client:         client,
 		projectIdOrKey: projectIdOrKey,
 		lookupRole:     make(map[string]string),
@@ -59,7 +60,7 @@ func NewProjectRoleManager(client *JiraClient, projectIdOrKey string) *Optimized
 }
 
 // ReadRoles retrieves and processes roles for the project.
-func (manager *OptimizedProjectRoleService) ReadRoles(allRoles []string) (*jira.ObjectRoles, error) {
+func (manager *ProjectRoleManage) ReadRoles(allRoles []string) (*jira.ObjectRoles, error) {
 	projectRoles, err := manager.client.ProjectRoleService().ReadProjectRoles(manager.projectIdOrKey)
 	if err != nil {
 		return nil, err
@@ -85,7 +86,7 @@ func (manager *OptimizedProjectRoleService) ReadRoles(allRoles []string) (*jira.
 }
 
 // filterRolesByNames filters roles based on provided names.
-func (manager *OptimizedProjectRoleService) filterRolesByNames(roles []jira.RoleType, roleNames []string) []jira.RoleType {
+func (manager *ProjectRoleManage) filterRolesByNames(roles []jira.RoleType, roleNames []string) []jira.RoleType {
 	// Then we only focus on roles that in stated in the parameters
 	// This is for REST API optimization
 	filteredRoles := make([]jira.RoleType, 0)
@@ -99,7 +100,7 @@ func (manager *OptimizedProjectRoleService) filterRolesByNames(roles []jira.Role
 }
 
 // processRoles organizes role data into user and group mappings.
-func (manager *OptimizedProjectRoleService) processRoles(roles []jira.RoleType) (map[string]jira.GroupRoles, map[string]jira.UserRoles) {
+func (manager *ProjectRoleManage) processRoles(roles []jira.RoleType) (map[string]jira.GroupRoles, map[string]jira.UserRoles) {
 	groupRoles := make(map[string]jira.GroupRoles)
 	userRoles := make(map[string]jira.UserRoles)
 
@@ -120,7 +121,7 @@ func (manager *OptimizedProjectRoleService) processRoles(roles []jira.RoleType) 
 }
 
 // addGroupRole adds a role to a group.
-func (manager *OptimizedProjectRoleService) addGroupRole(groupRoles map[string]jira.GroupRoles, roleName string, actor jira.Actor) {
+func (manager *ProjectRoleManage) addGroupRole(groupRoles map[string]jira.GroupRoles, roleName string, actor jira.Actor) {
 	// First we retrieve the group from the map if available
 	groupId := actor.ActorGroup.GroupId
 	group, exists := groupRoles[groupId]
@@ -137,14 +138,21 @@ func (manager *OptimizedProjectRoleService) addGroupRole(groupRoles map[string]j
 }
 
 // addUserRole adds a role to a user.
-func (manager *OptimizedProjectRoleService) addUserRole(userRoles map[string]jira.UserRoles, roleName string, actor jira.Actor) {
+func (manager *ProjectRoleManage) addUserRole(userRoles map[string]jira.UserRoles, roleName string, actor jira.Actor) {
 	// First we retrieve the user from the map if available
 
 	accountId := actor.ActorUser.AccountID
 	user, exists := userRoles[accountId]
 	if !exists {
+		name := actor.DisplayName
+		jiraUser := manager.client.ActorLookupService().FindUserById(accountId)
+		if jiraUser != nil {
+			// found system user
+			name = jiraUser.EmailAddress
+		}
+
 		user = jira.UserRoles{
-			Name:      actor.DisplayName,
+			Name:      name,
 			AccountId: accountId,
 			Roles:     []string{},
 		}
@@ -154,39 +162,47 @@ func (manager *OptimizedProjectRoleService) addUserRole(userRoles map[string]jir
 }
 
 // UpdateUserRoles updates roles assigned to a user.
-func (manager *OptimizedProjectRoleService) UpdateUserRoles(username string, newRoles []string) error {
+func (manager *ProjectRoleManage) UpdateUserRoles(username string, newRoles []string) error {
 	// read assigned roles for selected group
-	accountId := manager.client.ActorLookupService().FindUser(username)
-	user := manager.objectRoles.FindUser(accountId)
+	jiraUser := manager.client.ActorLookupService().FindUser(username)
+	if jiraUser == nil {
+		return fmt.Errorf("unable to find user %s", username)
+	}
+
+	user := manager.objectRoles.FindUser(jiraUser.AccountID)
 
 	if user != nil {
 		adding, removing := user.DeltaRoles(newRoles)
-		manager.prepareRoleChanges(roleActorUser, accountId, adding, removing)
+		manager.prepareRoleChanges(roleActorUser, jiraUser.AccountID, adding, removing)
 	} else if len(newRoles) > 0 {
 		// If the item is not found but there are new permissions, add them.
-		manager.makeRoleChange(roleActorUser, accountId, roleAdding, newRoles)
+		manager.makeRoleChange(roleActorUser, jiraUser.AccountID, roleAdding, newRoles)
 	}
 	return nil
 }
 
 // UpdateGroupRoles updates roles assigned to a group.
-func (manager *OptimizedProjectRoleService) UpdateGroupRoles(groupName string, newRoles []string) error {
+func (manager *ProjectRoleManage) UpdateGroupRoles(groupName string, newRoles []string) error {
 	// read assigned roles for selected group
-	groupId := manager.client.ActorLookupService().FindGroup(groupName)
-	group := manager.objectRoles.FindGroup(groupId)
+	jiraGroup := manager.client.ActorLookupService().FindGroup(groupName)
+	if jiraGroup == nil {
+		return fmt.Errorf("unable to find group %s", jiraGroup)
+	}
+
+	group := manager.objectRoles.FindGroup(jiraGroup.GroupId)
 
 	if group != nil {
 		adding, removing := group.DeltaRoles(newRoles)
-		manager.prepareRoleChanges(roleActorGroup, groupId, adding, removing)
+		manager.prepareRoleChanges(roleActorGroup, jiraGroup.GroupId, adding, removing)
 	} else if len(newRoles) > 0 {
 		// If the item is not found but there are new permissions, add them.
-		manager.makeRoleChange(roleActorGroup, groupId, roleAdding, newRoles)
+		manager.makeRoleChange(roleActorGroup, jiraGroup.GroupId, roleAdding, newRoles)
 	}
 	return nil
 }
 
 // prepareRoleChanges prepares changes to be made to roles.
-func (manager *OptimizedProjectRoleService) prepareRoleChanges(roleActor RoleActorType, actorId string, adding, removing []string) {
+func (manager *ProjectRoleManage) prepareRoleChanges(roleActor RoleActorType, actorId string, adding, removing []string) {
 	if len(adding) > 0 {
 		// Add new permissions if there are any to add.
 		manager.makeRoleChange(roleActor, actorId, roleAdding, adding)
@@ -198,7 +214,7 @@ func (manager *OptimizedProjectRoleService) prepareRoleChanges(roleActor RoleAct
 }
 
 // makeRoleChange records a pending change to a role.
-func (manager *OptimizedProjectRoleService) makeRoleChange(roleActor RoleActorType, actorId string, changeType RoleChangeType, roles []string) {
+func (manager *ProjectRoleManage) makeRoleChange(roleActor RoleActorType, actorId string, changeType RoleChangeType, roles []string) {
 	actions := map[RoleActorType]map[RoleChangeType]func(*roleChangeRequest, string){
 		roleActorUser: {
 			roleAdding: func(req *roleChangeRequest, actorId string) {
@@ -233,7 +249,7 @@ func (manager *OptimizedProjectRoleService) makeRoleChange(roleActor RoleActorTy
 }
 
 // Finalized applies all pending role changes to the project.
-func (manager *OptimizedProjectRoleService) Finalized() {
+func (manager *ProjectRoleManage) Finalized() {
 	for roleId, changeReq := range manager.changeRequests {
 		projectRoleService := manager.client.ProjectRoleService()
 		if len(changeReq.addingUsers) > 0 || len(changeReq.addingGroups) > 0 {

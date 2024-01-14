@@ -315,6 +315,14 @@ func MockPayloadTransporter() *transport.MockPayloadTransport {
 				StatusCode: 200,
 				Body:       readFile("test/project_create.json"),
 			},
+			"PUT:/rest/api/latest/project/PROJECT": {
+				StatusCode: 200,
+				Body:       readFile("test/project_update.json"),
+			},
+			"DELETE:/rest/api/latest/project/PROJECT": {
+				StatusCode: 204,
+				Body:       "{}",
+			},
 			"GET:/rest/api/latest/plan/PROJECT-PLAN": {
 				StatusCode: 200,
 				Body:       readFile("test/project_plan.json"),

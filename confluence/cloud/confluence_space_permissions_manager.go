@@ -60,8 +60,8 @@ func (manager *SpacePermissionsManager) ReadPermissions() (*confluence.ObjectPer
 	manager.client.ActorLookupService().RegisterAccountIds(userIds...)
 	manager.client.ActorLookupService().RegisterGroupIds(groupIds...)
 
-	groupRoles := make(map[string]confluence.GroupPermissions)
-	userRoles := make(map[string]confluence.UserPermissions)
+	groupPermissions := make(map[string]confluence.GroupPermissions)
+	userPermissions := make(map[string]confluence.UserPermissions)
 	permissionsMapForRemoval := make(map[string]string)
 
 	// now armed with actor lookup service, we can build the same ObjectPermissions just like we have for jira, bitbucket and bamboo
@@ -70,30 +70,30 @@ func (manager *SpacePermissionsManager) ReadPermissions() (*confluence.ObjectPer
 		key := fmt.Sprintf("%s:%s", permission.Principal.Id, permission.Operation.GetSlug())
 		permissionsMapForRemoval[key] = permission.Id
 		if permission.Principal.Type == confluence.PrincipalUser {
-			username := manager.client.ActorLookupService().FindUserById(permission.Principal.Id)
-			manager.addUserRole(userRoles, permission.Operation, permission.Principal.Id, username)
+			user := manager.client.ActorLookupService().FindUserById(permission.Principal.Id)
+			manager.addUserPermission(userPermissions, permission.Operation, permission.Principal.Id, user.EmailAddress)
 
 		} else if permission.Principal.Type == confluence.PrincipalGroup {
-			groupName := manager.client.ActorLookupService().FindGroupById(permission.Principal.Id)
-			manager.addGroupRole(groupRoles, permission.Operation, permission.Principal.Id, groupName)
+			group := manager.client.ActorLookupService().FindGroupById(permission.Principal.Id)
+			manager.addGroupPermission(groupPermissions, permission.Operation, permission.Principal.Id, group.Name)
 		}
 	}
 
-	userRolesList := collections.GetValuesOfMap(userRoles)
-	groupRolesList := collections.GetValuesOfMap(groupRoles)
+	userPermissionsList := collections.GetValuesOfMap(userPermissions)
+	groupPermissionsList := collections.GetValuesOfMap(groupPermissions)
 
 	manager.permissionsMapForRemoval = permissionsMapForRemoval
 	manager.objectPermissions = &confluence.ObjectPermissions{
-		Users:  userRolesList,
-		Groups: groupRolesList,
+		Users:  userPermissionsList,
+		Groups: groupPermissionsList,
 	}
 
 	return manager.objectPermissions, nil
 }
 
-func (manager *SpacePermissionsManager) addGroupRole(groupRoles map[string]confluence.GroupPermissions, permission confluence.OperationV2, principalId, name string) {
+func (manager *SpacePermissionsManager) addGroupPermission(groupPermissions map[string]confluence.GroupPermissions, permission confluence.OperationV2, principalId, name string) {
 	// First we retrieve the group from the map if available
-	group, exists := groupRoles[principalId]
+	group, exists := groupPermissions[principalId]
 	if !exists {
 		// The group not in the map, so we add the group for the first time
 		group = confluence.GroupPermissions{
@@ -103,12 +103,12 @@ func (manager *SpacePermissionsManager) addGroupRole(groupRoles map[string]confl
 		}
 	}
 	group.Permissions = append(group.Permissions, permission.GetSlug())
-	groupRoles[principalId] = group
+	groupPermissions[principalId] = group
 }
 
-func (manager *SpacePermissionsManager) addUserRole(userRoles map[string]confluence.UserPermissions, permission confluence.OperationV2, principalId, name string) {
+func (manager *SpacePermissionsManager) addUserPermission(userPermissions map[string]confluence.UserPermissions, permission confluence.OperationV2, principalId, name string) {
 	// First we retrieve the user from the map if available
-	user, exists := userRoles[principalId]
+	user, exists := userPermissions[principalId]
 	if !exists {
 		user = confluence.UserPermissions{
 			Name:        name,
@@ -117,7 +117,7 @@ func (manager *SpacePermissionsManager) addUserRole(userRoles map[string]conflue
 		}
 	}
 	user.Permissions = append(user.Permissions, permission.GetSlug())
-	userRoles[principalId] = user
+	userPermissions[principalId] = user
 }
 
 func (manager *SpacePermissionsManager) getUserGroupIds(permissions *[]confluence.PermissionV2) ([]string, []string) {
@@ -135,32 +135,36 @@ func (manager *SpacePermissionsManager) getUserGroupIds(permissions *[]confluenc
 	return collections.GetKeysOfMap(usersMap), collections.GetKeysOfMap(groupsMap)
 }
 
-func (manager *SpacePermissionsManager) UpdateUserRoles(username string, newRoles []string) error {
-	// read assigned roles for selected group
-	accountId := manager.client.ActorLookupService().FindUser(username)
-	user := manager.objectPermissions.FindUser(accountId)
+func (manager *SpacePermissionsManager) UpdateUserPermissions(username string, newPermissions []string) error {
+	// read assigned permissions for selected group
+	jiraUser := manager.client.ActorLookupService().FindUser(username)
+	user := manager.objectPermissions.FindUser(jiraUser.AccountID)
 
 	if user != nil {
-		adding, removing := user.DeltaPermissions(newRoles)
-		manager.preparePermissionChanges(permissionActorUser, accountId, adding, removing)
-	} else if len(newRoles) > 0 {
+		adding, removing := user.DeltaPermissions(newPermissions)
+		manager.preparePermissionChanges(permissionActorUser, jiraUser.AccountID, adding, removing)
+	} else if len(newPermissions) > 0 {
 		// If the item is not found but there are new permissions, add them.
-		manager.makePermissionChange(permissionActorUser, accountId, permissionAdding, newRoles)
+		manager.makePermissionChange(permissionActorUser, jiraUser.AccountID, permissionAdding, newPermissions)
 	}
 	return nil
 }
 
-func (manager *SpacePermissionsManager) UpdateGroupRoles(groupName string, newRoles []string) error {
-	// read assigned roles for selected group
-	groupId := manager.client.ActorLookupService().FindGroup(groupName)
-	group := manager.objectPermissions.FindGroup(groupId)
+func (manager *SpacePermissionsManager) UpdateGroupPermissions(groupName string, newPermissions []string) error {
+	// read assigned permissions for selected group
+	jiraGroup := manager.client.ActorLookupService().FindGroup(groupName)
+	if jiraGroup == nil {
+		return fmt.Errorf("unable to find group %s", jiraGroup)
+	}
+
+	group := manager.objectPermissions.FindGroup(jiraGroup.GroupId)
 
 	if group != nil {
-		adding, removing := group.DeltaPermissions(newRoles)
-		manager.preparePermissionChanges(permissionActorGroup, groupId, adding, removing)
-	} else if len(newRoles) > 0 {
+		adding, removing := group.DeltaPermissions(newPermissions)
+		manager.preparePermissionChanges(permissionActorGroup, jiraGroup.GroupId, adding, removing)
+	} else if len(newPermissions) > 0 {
 		// If the item is not found but there are new permissions, add them.
-		manager.makePermissionChange(permissionActorGroup, groupId, permissionAdding, newRoles)
+		manager.makePermissionChange(permissionActorGroup, jiraGroup.GroupId, permissionAdding, newPermissions)
 	}
 	return nil
 }

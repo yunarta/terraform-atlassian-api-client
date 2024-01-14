@@ -27,6 +27,14 @@
       "actorGroup": {
         "groupId": "557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9"
       }
+    },
+    {
+      "id": 10263,
+      "displayName": "jira-admins-mobilesolutionworks",
+      "type": "atlassian-group-role-actor",
+      "actorGroup": {
+        "groupId": "2eeab65d-ab39-4eee-965b-fd2a8bed9d12"
+      }
     }
   ]
 }

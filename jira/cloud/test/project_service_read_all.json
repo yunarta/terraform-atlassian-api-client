@@ -1,5 +1,5 @@
 {
-  "isLast":true,
+  "isLast": true,
   "values": [
     {
       "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",

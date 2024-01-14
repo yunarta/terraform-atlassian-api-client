@@ -20,20 +20,6 @@ func TestProjectRoleService_ReadAllRole(t *testing.T) {
 	assert.Equal(t, "Developer", roles[2].Name)
 }
 
-//func TestProjectRoleService_ReadProjectRoleAssignment(t *testing.T) {
-//	var err error
-//
-//	var client = NewJiraClient(MockPayloadTransporter())
-//
-//	assignments, err := client.ProjectRoleService().ReadProjectRoleAssignment("P", []string{"Administrators", "Developer", "atlassian-addons-project-access"})
-//	assert.Nil(t, err)
-//	assert.NotNil(t, assignments)
-//
-//	assert.Len(t, assignments.RoleMap, 2)
-//	assert.Len(t, assignments.Groups, 1)
-//	assert.Len(t, assignments.Users, 2)
-//}
-
 func TestProjectRoleService_ReadProjectRoles(t *testing.T) {
 	var err error
 

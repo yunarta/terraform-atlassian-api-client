@@ -71,11 +71,31 @@ func MockPayloadTransporter() *transport.MockPayloadTransport {
 			},
 			"GET:/rest/api/latest/user/search?query=yunarta.kartawahyudi@gmail.com": {
 				StatusCode: 200,
-				Body:       readFile("user_service_find_user.json"),
+				Body:       readFile("actor_service_find_user.json"),
 			},
 			"GET:/rest/api/latest/groups/picker?query=jira-admins-mobilesolutionworks": {
 				StatusCode: 200,
-				Body:       readFile("user_service_find_group.json"),
+				Body:       readFile("actor_service_find_group.json"),
+			},
+			"GET:/rest/api/latest/groups/picker?query=site-admins": {
+				StatusCode: 200,
+				Body:       readFile("actor_service_find_group.json"),
+			},
+			"GET:/rest/api/latest/user/bulk?accountId=557058:32b276cf-1a9f-45ae-b3f5-f850bc24f1b9": {
+				StatusCode: 200,
+				Body:       readFile("actor_service_bulk_get_users.json"),
+			},
+			"GET:/rest/api/latest/group/bulk?groupId=94af0e5e-018a-422d-bffa-e41fc5b71d29": {
+				StatusCode: 200,
+				Body:       readFile("actor_service_bulk_get_groups.json"),
+			},
+			"GET:/rest/api/latest/group/bulk?groupId=2eeab65d-ab39-4eee-965b-fd2a8bed9d12": {
+				StatusCode: 200,
+				Body:       readFile("actor_service_bulk_get_groups.json"),
+			},
+			"GET:/rest/api/latest/group/bulk?groupName=site-admins": {
+				StatusCode: 200,
+				Body:       readFile("actor_service_bulk_get_groups2.json"),
 			},
 		},
 	}

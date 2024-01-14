@@ -46,3 +46,10 @@ func TestProjectService_Update(t *testing.T) {
 	assert.Equal(t, "NAME-UPDATED", project.Name)
 	assert.Equal(t, "DESCRIPTION-UPDATED", project.Description)
 }
+
+func TestProjectService_Delete(t *testing.T) {
+	var client = NewBitbucketClient(MockPayloadTransporter())
+
+	err := client.ProjectService().Delete("KEY")
+	assert.Nil(t, err)
+}

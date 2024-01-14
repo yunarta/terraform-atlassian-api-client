@@ -21,6 +21,10 @@ func MockPayloadTransporter() *transport.MockPayloadTransport {
 				StatusCode: 200,
 				Body:       readFile("update_project.json"),
 			},
+			"DELETE:/rest/api/latest/projects/KEY": {
+				StatusCode: 204,
+				Body:       "{}",
+			},
 			// project permissions
 			"GET:/rest/api/latest/projects/A/permissions/users?limit=1000": {
 				StatusCode: 200,
