@@ -124,9 +124,10 @@ func updateItemPermission[K any](
 	// If the item is found, calculate the permissions to add and remove.
 	if item != nil {
 		adding, removing := item.DeltaPermissions(newPermissions)
-		// Add new permissions if there are any to add.
+		// Add new permissions if there are any to add. We are not adding delta to ensure
+		// all missing permissions are restored.
 		if len(adding) > 0 {
-			err = addPermissions(itemId, key, adding)
+			err = addPermissions(itemId, key, newPermissions)
 			if err != nil {
 				return err
 			}
