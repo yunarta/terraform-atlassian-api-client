@@ -44,7 +44,7 @@ rootEntity: !!com.atlassian.bamboo.specs.model.repository.bitbucket.server.Bitbu
     id: %s
     name: %s
   sshCloneUrl: %s
-  useLfs: true
+  useLfs: false
 specModelVersion: 9.3.0
 `,
 				create.Name,
