@@ -10,6 +10,12 @@ type RepositoryList struct {
 	Results   []Repository `json:"searchResults,omitempty"`
 }
 
+type ProjectRepositoryList struct {
+	Start     int          `json:"start-index,omitempty"`
+	MaxResult int          `json:"max-result,omitempty"`
+	Results   []Repository `json:"results,omitempty"`
+}
+
 // Repository is a struct that holds information related to a single Bamboo repository.
 // Each repository is identified by a unique 'ID',
 // 'Name' field is the name given to that repository and
