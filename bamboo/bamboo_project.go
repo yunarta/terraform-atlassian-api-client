@@ -34,3 +34,8 @@ type Plan struct {
 	ShortName   string `json:"shortName,omitempty"`
 	Name        string `json:"name,omitempty"`
 }
+
+type Variable struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
