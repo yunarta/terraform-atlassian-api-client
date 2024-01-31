@@ -5,7 +5,9 @@ import (
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 // RepositoryService is a struct that provides methods to interact with repositories.
@@ -214,8 +216,8 @@ func (service *RepositoryService) ReadProject(project string, name string) (*Rep
 	return nil, nil
 }
 
-// Update enables or disables Continuous Integration (CI) for a specified repository.
-func (service *RepositoryService) Update(repositoryId int, enableCi bool) error {
+// EnableCI enables or disables Continuous Integration (CI) for a specified repository.
+func (service *RepositoryService) EnableCI(repositoryId int, enableCi bool) error {
 	// Send a PUT request to update the repository's CI settings.
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
@@ -228,6 +230,129 @@ func (service *RepositoryService) Update(repositoryId int, enableCi bool) error 
 		},
 	}, 200)
 	return err
+}
+
+func (service *RepositoryService) Update(repositoryId int, request CreateRepository) error {
+	// Send a PUT request to update the repository's CI settings.
+	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    fmt.Sprintf("/rest/api/latest/export/repository/id/%d", repositoryId),
+	}, 200)
+	if err != nil {
+		return err
+	}
+
+	var export []string
+	err = reply.Object(&export)
+	if err != nil {
+		return err
+	}
+
+	if len(export) == 0 {
+		return fmt.Errorf("unable to find repository with id %d", repositoryId)
+	}
+	filename := filepath.Base(export[0])
+	oid := strings.TrimSuffix(filename, filepath.Ext(filename))
+
+	_, err = service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    "/rest/api/latest/import/repository",
+		// The payload is formatted in YAML and specifies various repository properties.
+		Payload: &XYamlPayload{
+			Data: fmt.Sprintf(`
+!!com.atlassian.bamboo.specs.util.BambooSpecProperties
+rootEntity: !!com.atlassian.bamboo.specs.model.repository.bitbucket.server.BitbucketServerRepositoryProperties
+  oid:
+    oid: %s
+  name: %s
+  projectKey: %s
+  repositorySlug: %s
+  branch: master
+  server:
+    id: %s
+    name: %s
+  sshCloneUrl: %s
+  useLfs: false
+specModelVersion: 9.3.0
+`,
+				oid,
+				request.Name,
+				request.ProjectKey,
+				request.RepositorySlug,
+				request.ServerId,
+				request.ServerName,
+				request.CloneUrl,
+			),
+		},
+	}, 200)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (service *RepositoryService) UpdateProject(repositoryId int, request CreateProjectRepository) error {
+	// Send a PUT request to update the repository's CI settings.
+	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    fmt.Sprintf("/rest/api/latest/export/repository/id/%d", repositoryId),
+	}, 200)
+	if err != nil {
+		return err
+	}
+
+	var export []string
+	err = reply.Object(&export)
+	if err != nil {
+		return err
+	}
+
+	if len(export) == 0 {
+		return fmt.Errorf("unable to find repository with id %d", repositoryId)
+	}
+	filename := filepath.Base(export[0])
+	oid := strings.TrimSuffix(filename, filepath.Ext(filename))
+
+	_, err = service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    "/rest/api/latest/import/repository",
+		// The payload is formatted in YAML and specifies various repository properties.
+		Payload: &XYamlPayload{
+			Data: fmt.Sprintf(`
+!!com.atlassian.bamboo.specs.util.BambooSpecProperties
+rootEntity: !!com.atlassian.bamboo.specs.model.repository.bitbucket.server.BitbucketServerRepositoryProperties
+  oid:
+    oid: %s  
+  project:
+    key: %s
+  name: %s
+  projectKey: %s
+  repositorySlug: %s
+  branch: master
+  server:
+    id: %s
+    name: %s
+  sshCloneUrl: %s
+  useLfs: false
+specModelVersion: 9.3.0
+`,
+				oid,
+				request.Project,
+				request.Name,
+				request.ProjectKey,
+				request.RepositorySlug,
+				request.ServerId,
+				request.ServerName,
+				request.CloneUrl,
+			),
+		},
+	}, 200)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ReadAccessor retrieves a list of repositories that a specific repository has access to.

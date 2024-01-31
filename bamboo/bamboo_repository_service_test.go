@@ -37,7 +37,7 @@ func TestRepositoryService_Update(t *testing.T) {
 	repository, err := client.RepositoryService().Read("oraclelinux")
 	assert.Nil(t, err)
 
-	err = client.RepositoryService().Update(repository.ID, true)
+	err = client.RepositoryService().EnableCI(repository.ID, true)
 	assert.Nil(t, err)
 }
 
