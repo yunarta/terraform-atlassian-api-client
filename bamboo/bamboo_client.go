@@ -5,10 +5,11 @@ import "github.com/yunarta/terraform-api-transport/transport"
 // Client represents the primary entry point for interacting with the Bamboo services.
 // It contains service handlers for the project, deployment, repository and user services.
 type Client struct {
-	projectService    *ProjectService
-	deploymentService *DeploymentService
-	repositoryService *RepositoryService
-	userService       *UserService
+	agentAssignmentService *AgentAssignmentService
+	projectService         *ProjectService
+	deploymentService      *DeploymentService
+	repositoryService      *RepositoryService
+	userService            *UserService
 }
 
 // NewBambooClient constructs and returns a new instance of the Client type.
@@ -17,11 +18,16 @@ type Client struct {
 // with this transport payload.
 func NewBambooClient(transport transport.PayloadTransport) *Client {
 	return &Client{
-		projectService:    &ProjectService{transport: transport},
-		deploymentService: &DeploymentService{transport: transport},
-		repositoryService: &RepositoryService{transport: transport},
-		userService:       &UserService{transport: transport},
+		agentAssignmentService: &AgentAssignmentService{transport: transport},
+		projectService:         &ProjectService{transport: transport},
+		deploymentService:      &DeploymentService{transport: transport},
+		repositoryService:      &RepositoryService{transport: transport},
+		userService:            &UserService{transport: transport},
 	}
+}
+
+func (client *Client) AgentAssignmentService() *AgentAssignmentService {
+	return client.agentAssignmentService
 }
 
 // ProjectService is a getter method that returns the project service handler
