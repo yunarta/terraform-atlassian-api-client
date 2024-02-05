@@ -232,6 +232,15 @@ func (service *RepositoryService) EnableCI(repositoryId int, enableCi bool) erro
 	return err
 }
 
+func (service *RepositoryService) ScanCI(repositoryId int) error {
+	// Send a PUT request to update the repository's CI settings.
+	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    fmt.Sprintf("/rest/api/latest/repository/%d/scanNow", repositoryId),
+	}, 204)
+	return err
+}
+
 func (service *RepositoryService) Update(repositoryId int, request CreateRepository) error {
 	// Send a PUT request to update the repository's CI settings.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
