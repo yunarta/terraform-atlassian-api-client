@@ -11,7 +11,26 @@ type AgentAssignmentService struct {
 	transport transport.PayloadTransport
 }
 
-func (service *AgentAssignmentService) Create(request AgentAssignment) error {
+func (service *AgentAssignmentService) Read(request AgentQuery) (*[]AgentAssignment, error) {
+	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url: fmt.Sprintf("/rest/api/latest/agent/assignment?executorType=%s&executorId=%d",
+			request.ExecutorType,
+			request.ExecutorId,
+		),
+		// Check for any errors. If there's an error, it's returned immediately.
+	}, 200)
+
+	deployment := make([]AgentAssignment, 0)
+	err = reply.Object(&deployment)
+	if err != nil {
+		return nil, err
+	}
+
+	return &deployment, nil
+}
+
+func (service *AgentAssignmentService) Create(request AgentAssignmentRequest) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
 		Url: fmt.Sprintf("/rest/api/latest/agent/assignment?executorType=%s&executorId=%d&entityId=%d&assignmentType=%s",
@@ -25,7 +44,7 @@ func (service *AgentAssignmentService) Create(request AgentAssignment) error {
 	return err
 }
 
-func (service *AgentAssignmentService) Delete(request AgentAssignment) error {
+func (service *AgentAssignmentService) Delete(request AgentAssignmentRequest) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
 		Url: fmt.Sprintf("/rest/api/latest/agent/assignment?executorType=%s&executorId=%d&entityId=%d&assignmentType=%s",
