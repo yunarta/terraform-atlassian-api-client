@@ -4,7 +4,7 @@
   "isLastPage": true,
   "values": [
     {
-      "name": "bamboo-admin",
+      "name": "bitbucket-admin",
       "deletable": true
     }
   ],
