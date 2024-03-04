@@ -55,9 +55,9 @@ func (service *UserService) FindGroup(group string) (*Group, error) {
 	}
 
 	for _, item := range response.Values {
-		if item == group {
+		if item.Name == group {
 			return &Group{
-				Name: item,
+				Name: item.Name,
 			}, nil
 		}
 	}

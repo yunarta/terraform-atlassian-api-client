@@ -5,7 +5,7 @@ type Group struct {
 }
 
 type GroupResponse struct {
-	Values []string `json:"values,omitempty"`
+	Values []Group `json:"values,omitempty"`
 }
 
 type User struct {
