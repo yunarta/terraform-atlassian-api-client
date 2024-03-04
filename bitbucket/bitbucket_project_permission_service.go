@@ -116,7 +116,7 @@ func (service *ProjectService) UpdateGroupPermission(projectKey string, groupNam
 		} else {
 			err = service.removeGroupPermission(projectKey, groupName)
 		}
-	} else {
+	} else if len(newPermission) > 0 {
 		err = service.addGroupPermission(projectKey, groupName, newPermission)
 	}
 
