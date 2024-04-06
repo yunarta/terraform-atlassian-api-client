@@ -3,7 +3,10 @@
   "limit": 25,
   "isLastPage": true,
   "values": [
-    "bitbucket-admin"
+    {
+      "name": "bitbucket-admin",
+      "deletable": true
+    }
   ],
   "start": 0
 }

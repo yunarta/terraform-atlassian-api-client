@@ -102,8 +102,9 @@ func (service *ActorLookupService) syncUser(user *jira.User) {
 	service.Mutex.Lock()
 	username := util.CoalesceString(user.EmailAddress, user.DisplayName)
 
-	service.usernames[username] = user
-	service.accountIds[user.AccountID] = user
+	var insert = user
+	service.usernames[username] = insert
+	service.accountIds[user.AccountID] = insert
 
 	defer service.Mutex.Unlock()
 }
@@ -171,6 +172,7 @@ func (service *ActorLookupService) FindGroupById(groupId string) *jira.Group {
 }
 
 func (service *ActorLookupService) syncGroup(group *jira.Group) {
-	service.groupNames[group.Name] = group
-	service.groupIds[group.GroupId] = group
+	var insert = group
+	service.groupNames[group.Name] = insert
+	service.groupIds[group.GroupId] = insert
 }
