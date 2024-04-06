@@ -142,10 +142,10 @@ func (manager *SpacePermissionsManager) UpdateUserPermissions(username string, n
 
 	if user != nil {
 		adding, removing := user.DeltaPermissions(newPermissions)
-		manager.preparePermissionChanges(permissionActorUser, jiraUser.AccountID, adding, removing)
+		manager.preparePermissionChanges(permissionActorUser, confluence.PrincipalUser, jiraUser.AccountID, adding, removing)
 	} else if len(newPermissions) > 0 {
 		// If the item is not found but there are new permissions, add them.
-		manager.makePermissionChange(permissionActorUser, jiraUser.AccountID, permissionAdding, newPermissions)
+		manager.makePermissionChange(permissionActorUser, confluence.PrincipalUser, jiraUser.AccountID, permissionAdding, newPermissions)
 	}
 	return nil
 }
@@ -154,34 +154,34 @@ func (manager *SpacePermissionsManager) UpdateGroupPermissions(groupName string,
 	// read assigned permissions for selected group
 	jiraGroup := manager.client.ActorLookupService().FindGroup(groupName)
 	if jiraGroup == nil {
-		return fmt.Errorf("unable to find group %s", jiraGroup)
+		return fmt.Errorf("unable to find group %s", groupName)
 	}
 
 	group := manager.objectPermissions.FindGroup(jiraGroup.GroupId)
 
 	if group != nil {
 		adding, removing := group.DeltaPermissions(newPermissions)
-		manager.preparePermissionChanges(permissionActorGroup, jiraGroup.GroupId, adding, removing)
+		manager.preparePermissionChanges(permissionActorGroup, confluence.PrincipalGroup, jiraGroup.GroupId, adding, removing)
 	} else if len(newPermissions) > 0 {
 		// If the item is not found but there are new permissions, add them.
-		manager.makePermissionChange(permissionActorGroup, jiraGroup.GroupId, permissionAdding, newPermissions)
+		manager.makePermissionChange(permissionActorGroup, confluence.PrincipalGroup, jiraGroup.GroupId, permissionAdding, newPermissions)
 	}
 	return nil
 }
 
-func (manager *SpacePermissionsManager) preparePermissionChanges(permissionActor permissionActorType, actorId string, adding, removing []string) {
+func (manager *SpacePermissionsManager) preparePermissionChanges(permissionActor permissionActorType, principalType, actorId string, adding, removing []string) {
 	if len(adding) > 0 {
 		// Add new permissions if there are any to add.
-		manager.makePermissionChange(permissionActor, actorId, permissionAdding, adding)
+		manager.makePermissionChange(permissionActor, principalType, actorId, permissionAdding, adding)
 	}
 	if len(removing) > 0 {
 		// Remove old permissions if there are any to remove.
-		manager.makePermissionChange(permissionActor, actorId, permissionRemoving, removing)
+		manager.makePermissionChange(permissionActor, principalType, actorId, permissionRemoving, removing)
 	}
 }
 
-func (manager *SpacePermissionsManager) makePermissionChange(permissionActor permissionActorType, actorId string, changeType permissionsChangeType, permissions []string) {
-	actions := map[permissionActorType]map[permissionsChangeType]func(string, string){
+func (manager *SpacePermissionsManager) makePermissionChange(permissionActor permissionActorType, principalType, actorId string, changeType permissionsChangeType, permissions []string) {
+	actions := map[permissionActorType]map[permissionsChangeType]func(string, string, string){
 		permissionActorUser: {
 			permissionAdding:   manager.addPermission,
 			permissionRemoving: manager.removePermission,
@@ -195,16 +195,16 @@ func (manager *SpacePermissionsManager) makePermissionChange(permissionActor per
 	slices.SortFunc(permissions, confluence.SortOperation)
 	for _, permission := range permissions {
 		if action := actions[permissionActor][changeType]; action != nil {
-			action(permission, actorId)
+			action(permission, principalType, actorId)
 		}
 	}
 }
 
-func (manager *SpacePermissionsManager) addPermission(permission, actorId string) {
+func (manager *SpacePermissionsManager) addPermission(permission, principal, actorId string) {
 	permissionParts := strings.Split(permission, "_")
 	_, _ = manager.client.SpacePermissionsService().Create(manager.spaceKey, confluence.AddPermission{
 		Subject: confluence.Subject{
-			Type: confluence.PrincipalUser,
+			Type: principal,
 			Id:   actorId,
 		},
 		Operation: confluence.AddOperation{
@@ -214,7 +214,7 @@ func (manager *SpacePermissionsManager) addPermission(permission, actorId string
 	})
 }
 
-func (manager *SpacePermissionsManager) removePermission(permission, actorId string) {
+func (manager *SpacePermissionsManager) removePermission(permission, _, actorId string) {
 	key := fmt.Sprintf("%s:%s", actorId, permission)
 	requestId := manager.permissionsMapForRemoval[key]
 	_ = manager.client.SpacePermissionsService().Delete(manager.spaceKey, requestId)
