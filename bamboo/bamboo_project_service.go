@@ -9,7 +9,6 @@ import (
 const (
 	projectsEndPoint         = "/rest/api/latest/project"
 	projectEndpoint          = "/rest/api/latest/project/%s"
-	planEndPoint             = "/rest/api/latest/plan/%s"
 	specRepositoriesEndPoint = "/rest/api/latest/project/%s/repository"
 	specRepositoryEndPoint   = "/rest/api/latest/project/%s/repository/%d"
 )
@@ -119,31 +118,6 @@ func (service *ProjectService) Delete(projectKey string) error {
 
 	// Return the error (if any). If the function call was successful the error will be nil.
 	return err
-}
-
-// The ReadPlan function fetches the details of a plan given its key.
-// A plan in Bamboo defines a single build, including source code repository, optional triggers, commands to execute, and test results to collect.
-func (service *ProjectService) ReadPlan(planKey string) (*Plan, error) {
-	// We send a GET request to fetch the plan. A 200 status code signifies success.
-	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
-		Method: http.MethodGet,
-		Url:    fmt.Sprintf(planEndPoint, planKey),
-	}, 200)
-	// If there's a communication error, we return it immediately.
-	if err != nil {
-		return nil, err
-	}
-
-	response := Plan{}
-	// Parse the return data into a Plan struct.
-	err = reply.Object(&response)
-	if err != nil {
-		// If parsing fails, we return the error.
-		return nil, err
-	}
-
-	// If everything works as it should, we return the fetched plan.
-	return &response, nil
 }
 
 // The GetSpecRepositories function fetches the repositories of a given project.

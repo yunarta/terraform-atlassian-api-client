@@ -30,7 +30,9 @@ type Plan struct {
 	ProjectKey  string `json:"projectKey,omitempty"`
 	ProjectName string `json:"projectName,omitempty"`
 	Description string `json:"description,omitempty"`
+	Id          int64  `json:"id,omitempty"`
 	Key         string `json:"key,omitempty"`
+	ShortKey    string `json:"shortKey,omitempty"`
 	ShortName   string `json:"shortName,omitempty"`
 	Name        string `json:"name,omitempty"`
 }
