@@ -22,7 +22,7 @@ func NewBambooClient(transport transport.PayloadTransport) *Client {
 		projectService:         &ProjectService{transport: transport},
 		deploymentService:      &DeploymentService{transport: transport},
 		repositoryService:      &RepositoryService{transport: transport},
-		userService:            &UserService{transport: transport},
+		userService:            NewUserService(transport),
 	}
 }
 
