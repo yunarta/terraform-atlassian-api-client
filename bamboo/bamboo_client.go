@@ -24,7 +24,7 @@ func NewBambooClient(transport transport.PayloadTransport) *Client {
 		planService:            &PlanService{transport: transport},
 		deploymentService:      &DeploymentService{transport: transport},
 		repositoryService:      &RepositoryService{transport: transport},
-		userService:            &UserService{transport: transport},
+		userService:            NewUserService(transport),
 	}
 }
 

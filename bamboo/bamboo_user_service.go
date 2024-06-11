@@ -10,6 +10,16 @@ import (
 // It uses a PayloadTransport from the transport package for API communication.
 type UserService struct {
 	transport transport.PayloadTransport
+	users     []string
+	groups    []string
+}
+
+func NewUserService(transport transport.PayloadTransport) *UserService {
+	return &UserService{
+		transport: transport,
+		users:     make([]string, 0),
+		groups:    make([]string, 0),
+	}
 }
 
 // CurrentUser retrieves the current user's information.
@@ -113,4 +123,20 @@ func (service *UserService) FindGroup(group string) (*Group, error) {
 
 	// If no match is found, return nil.
 	return nil, nil
+}
+
+func (service *UserService) LookupUser(user string) bool {
+	return contains(service.users, user)
+}
+
+func (service *UserService) ValidateUser(user string) {
+	service.users = append(service.users, user)
+}
+
+func (service *UserService) LookupGroup(group string) bool {
+	return contains(service.groups, group)
+}
+
+func (service *UserService) ValidateGroup(group string) {
+	service.groups = append(service.groups, group)
 }

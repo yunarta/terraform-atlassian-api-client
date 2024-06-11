@@ -1,5 +1,10 @@
 package bamboo
 
+import (
+	"fmt"
+	"github.com/yunarta/terraform-atlassian-api-client/util"
+)
+
 // Define constants
 const (
 	// These are endpoint templates for Bamboo API.
@@ -126,4 +131,74 @@ func (service *ProjectService) UpdateRolePermissions(projectKey string, role str
 		newPermissions,
 		service.addRolePermissions,
 		service.removeRolePermissions)
+}
+
+func (service *ProjectService) findAvailableUser(projectKey string, user string) (*UserPermissionResponse, error) {
+	// Returns the permissions helper to read the user permissions
+	return PermissionsHelper{
+		Transport: service.transport,
+		Url:       fmt.Sprintf("/rest/api/latest/permissions/project/%s/available-users?limit=1000%s", projectKey, util.QueryParam("name", user)),
+	}.ReadUserPermissions()
+}
+
+func (service *ProjectService) FindAvailableUser(projectKey string, username string) (*UserPermission, error) {
+	// Reading user permissions
+	userPermissions, err := service.findAvailableUser(projectKey, username)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range userPermissions.Results {
+		if user.Name == username {
+			return &user, nil
+		}
+	}
+
+	userPermissions, err = service.readUserPermissions(projectKey, username)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range userPermissions.Results {
+		if user.Name == username {
+			return &user, nil
+		}
+	}
+
+	return nil, nil
+}
+
+func (service *ProjectService) findAvailableGroup(projectKey string, group string) (*GroupPermissionResponse, error) {
+	// Returns the permissions helper to read the user permissions
+	return PermissionsHelper{
+		Transport: service.transport,
+		Url:       fmt.Sprintf("/rest/api/latest/permissions/project/%s/available-groups?limit=1000%s", projectKey, util.QueryParam("name", group)),
+	}.ReadGroupPermissions()
+}
+
+func (service *ProjectService) FindAvailableGroup(projectKey string, groupName string) (*GroupPermission, error) {
+	// Reading user permissions
+	groupPermissions, err := service.findAvailableGroup(projectKey, groupName)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, group := range groupPermissions.Results {
+		if group.Name == groupName {
+			return &group, nil
+		}
+	}
+
+	groupPermissions, err = service.readGroupPermissions(projectKey, groupName)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, group := range groupPermissions.Results {
+		if group.Name == groupName {
+			return &group, nil
+		}
+	}
+
+	return nil, nil
 }
