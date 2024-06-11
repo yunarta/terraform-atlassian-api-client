@@ -177,3 +177,73 @@ func (service *DeploymentService) UpdateRolePermissions(deploymentId int, role s
 		service.removeRolePermissions,
 	)
 }
+
+func (service *DeploymentService) findAvailableUser(deploymentId int, user string) (*UserPermissionResponse, error) {
+	// Returns the permissions helper to read the user permissions
+	return PermissionsHelper{
+		Transport: service.transport,
+		Url:       fmt.Sprintf("/rest/api/latest/permissions/deployment/%d/available-users?limit=1000%s", deploymentId, util.QueryParam("name", user)),
+	}.ReadUserPermissions()
+}
+
+func (service *DeploymentService) FindAvailableUser(deploymentId int, username string) (*UserPermission, error) {
+	// Reading user permissions
+	userPermissions, err := service.findAvailableUser(deploymentId, username)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range userPermissions.Results {
+		if user.Name == username {
+			return &user, nil
+		}
+	}
+
+	userPermissions, err = service.readUserPermissions(deploymentId, username)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, user := range userPermissions.Results {
+		if user.Name == username {
+			return &user, nil
+		}
+	}
+
+	return nil, nil
+}
+
+func (service *DeploymentService) findAvailableGroup(deploymentId int, group string) (*GroupPermissionResponse, error) {
+	// Returns the permissions helper to read the user permissions
+	return PermissionsHelper{
+		Transport: service.transport,
+		Url:       fmt.Sprintf("/rest/api/latest/permissions/deployment/%d/available-groups?limit=1000%s", deploymentId, util.QueryParam("name", group)),
+	}.ReadGroupPermissions()
+}
+
+func (service *DeploymentService) FindAvailableGroup(deploymentId int, groupName string) (*GroupPermission, error) {
+	// Reading user permissions
+	groupPermissions, err := service.findAvailableGroup(deploymentId, groupName)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, group := range groupPermissions.Results {
+		if group.Name == groupName {
+			return &group, nil
+		}
+	}
+
+	groupPermissions, err = service.readGroupPermissions(deploymentId, groupName)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, group := range groupPermissions.Results {
+		if group.Name == groupName {
+			return &group, nil
+		}
+	}
+
+	return nil, nil
+}
