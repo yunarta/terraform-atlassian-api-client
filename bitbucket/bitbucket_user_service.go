@@ -7,7 +7,7 @@ import (
 )
 
 const findUser = "/rest/api/latest/users?filter=%s"
-const findGroup = "/rest/api/latest/admin/groups?filter=%s"
+const findGroup = "/rest/api/latest/groups?filter=%s"
 
 type UserService struct {
 	transport transport.PayloadTransport
