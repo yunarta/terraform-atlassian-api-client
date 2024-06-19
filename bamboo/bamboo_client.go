@@ -7,6 +7,7 @@ import "github.com/yunarta/terraform-api-transport/transport"
 type Client struct {
 	agentAssignmentService *AgentAssignmentService
 	projectService         *ProjectService
+	planService            *PlanService
 	deploymentService      *DeploymentService
 	repositoryService      *RepositoryService
 	userService            *UserService
@@ -20,6 +21,7 @@ func NewBambooClient(transport transport.PayloadTransport) *Client {
 	return &Client{
 		agentAssignmentService: &AgentAssignmentService{transport: transport},
 		projectService:         &ProjectService{transport: transport},
+		planService:            &PlanService{transport: transport},
 		deploymentService:      &DeploymentService{transport: transport},
 		repositoryService:      &RepositoryService{transport: transport},
 		userService:            NewUserService(transport),
@@ -35,6 +37,10 @@ func (client *Client) AgentAssignmentService() *AgentAssignmentService {
 // creating, updating, or deleting a project.
 func (client *Client) ProjectService() *ProjectService {
 	return client.projectService
+}
+
+func (client *Client) PlanService() *PlanService {
+	return client.planService
 }
 
 // DeploymentService is a getter method that returns the deployment service handler
