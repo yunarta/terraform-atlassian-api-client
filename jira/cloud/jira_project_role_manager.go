@@ -85,6 +85,31 @@ func (manager *ProjectRoleManage) ReadRoles(allRoles []string) (*jira.ObjectRole
 	return manager.objectRoles, nil
 }
 
+// ReadAllRoles retrieves and processes all roles for the project.
+func (manager *ProjectRoleManage) ReadAllRoles() (*jira.ObjectRoles, error) {
+	projectRoles, err := manager.client.ProjectRoleService().ReadProjectRoles(manager.projectIdOrKey)
+	if err != nil {
+		return nil, err
+	}
+
+	groupRoles, userRoles := manager.processRoles(projectRoles)
+
+	accountIds, userRolesList := collections.SpliceMapToKeyValue(userRoles)
+	groupIds, groupRolesList := collections.SpliceMapToKeyValue(groupRoles)
+
+	if !manager.ReadOnly {
+		// We register the account ids and group ids for caching purpose
+		manager.client.ActorLookupService().RegisterAccountIds(accountIds...)
+		manager.client.ActorLookupService().RegisterGroupIds(groupIds...)
+	}
+
+	manager.objectRoles = &jira.ObjectRoles{
+		Groups: groupRolesList,
+		Users:  userRolesList,
+	}
+	return manager.objectRoles, nil
+}
+
 // filterRolesByNames filters roles based on provided names.
 func (manager *ProjectRoleManage) filterRolesByNames(roles []jira.RoleType, roleNames []string) []jira.RoleType {
 	// Then we only focus on roles that in stated in the parameters
