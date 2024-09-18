@@ -33,7 +33,8 @@ func NewActorLookupService(actorService *ActorService) *ActorLookupService {
 func (service *ActorLookupService) RegisterAccountIds(accountId ...string) {
 	users, _ := service.actorService.BulkGetUsers(accountId)
 	for _, user := range users {
-		service.syncUser(&user)
+		syncUser := user
+		service.syncUser(&syncUser)
 	}
 }
 
@@ -53,7 +54,8 @@ func (service *ActorLookupService) RegisterUsernames(username ...string) {
 		go func(user string) {
 			readUser, _ := service.actorService.ReadUser(user)
 			if readUser != nil {
-				service.syncUser(readUser)
+				syncUser := readUser
+				service.syncUser(syncUser)
 			}
 			defer wg.Done()
 		}(user)
@@ -68,7 +70,8 @@ func (service *ActorLookupService) FindUser(username string) *jira.User {
 		// the user is not in the system, so we fetch manually
 		readUser, _ := service.actorService.ReadUser(username)
 		if readUser != nil {
-			service.syncUser(readUser)
+			syncUser := readUser
+			service.syncUser(syncUser)
 			return readUser
 		} else {
 			return nil
@@ -85,7 +88,8 @@ func (service *ActorLookupService) FindUserById(accountId string) *jira.User {
 		users, _ := service.actorService.BulkGetUsers([]string{accountId})
 		var foundUser *jira.User
 		for _, user := range users {
-			service.syncUser(&user)
+			syncUser := user
+			service.syncUser(&syncUser)
 			if user.AccountID == accountId {
 				aCopy := user
 				foundUser = &aCopy
@@ -114,9 +118,10 @@ func (service *ActorLookupService) RegisterGroupIds(groupId ...string) {
 		return
 	}
 
-	users, _ := service.actorService.BulkGetGroupsById(groupId)
-	for _, user := range users {
-		service.syncGroup(&user)
+	groups, _ := service.actorService.BulkGetGroupsById(groupId)
+	for _, group := range groups {
+		syncGroup := group
+		service.syncGroup(&syncGroup)
 	}
 }
 
@@ -131,7 +136,8 @@ func (service *ActorLookupService) RegisterGroupNames(groupName ...string) {
 	}
 
 	for _, group := range groups {
-		service.syncGroup(&group)
+		syncGroup := group
+		service.syncGroup(&syncGroup)
 	}
 }
 
@@ -141,7 +147,8 @@ func (service *ActorLookupService) FindGroup(groupName string) *jira.Group {
 		// the user is not in the system, so we fetch manually
 		readGroup, _ := service.actorService.ReadGroup(groupName)
 		if readGroup != nil {
-			service.syncGroup(readGroup)
+			syncGroup := readGroup
+			service.syncGroup(syncGroup)
 			return readGroup
 		} else {
 			return nil
@@ -158,7 +165,8 @@ func (service *ActorLookupService) FindGroupById(groupId string) *jira.Group {
 		groups, _ := service.actorService.BulkGetGroupsById([]string{groupId})
 		var foundGroup *jira.Group
 		for _, group := range groups {
-			service.syncGroup(&group)
+			syncGroup := group
+			service.syncGroup(&syncGroup)
 			if group.GroupId == groupId {
 				aCopy := group
 				foundGroup = &aCopy
