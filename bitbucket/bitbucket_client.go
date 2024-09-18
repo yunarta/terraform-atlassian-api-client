@@ -12,7 +12,7 @@ func NewBitbucketClient(transport transport.PayloadTransport) *Client {
 	return &Client{
 		projectService:    &ProjectService{transport: transport},
 		repositoryService: &RepositoryService{transport: transport},
-		userService:       &UserService{transport: transport},
+		userService:       NewUserService(transport),
 	}
 }
 
