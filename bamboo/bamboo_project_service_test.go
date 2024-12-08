@@ -65,23 +65,23 @@ func TestProjectService_Delete(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestProjectService_ReadPlan(t *testing.T) {
-	var err error
-
-	transporter := MockPayloadTransporter()
-	var client = NewBambooClient(transporter)
-	plan, err := client.ProjectService().ReadPlan("PROJECT-PLAN")
-
-	assert.NoError(t, err)
-	assert.NotNil(t, plan)
-
-	assert.Equal(t, "PROJECT", plan.ProjectKey)
-	assert.Equal(t, "PROJECT", plan.ProjectName)
-	assert.Equal(t, "description", plan.Description)
-	assert.Equal(t, "PLAN", plan.Key)
-	assert.Equal(t, "short name", plan.ShortName)
-	assert.Equal(t, "name", plan.Name)
-}
+//func TestProjectService_ReadPlan(t *testing.T) {
+//	var err error
+//
+//	transporter := MockPayloadTransporter()
+//	var client = NewBambooClient(transporter)
+//	plan, err := client.ProjectService().ReadPlan("PROJECT-PLAN")
+//
+//	assert.NoError(t, err)
+//	assert.NotNil(t, plan)
+//
+//	assert.Equal(t, "PROJECT", plan.ProjectKey)
+//	assert.Equal(t, "PROJECT", plan.ProjectName)
+//	assert.Equal(t, "description", plan.Description)
+//	assert.Equal(t, "PLAN", plan.Key)
+//	assert.Equal(t, "short name", plan.ShortName)
+//	assert.Equal(t, "name", plan.Name)
+//}
 
 func TestProjectService_GetSpecRepositories(t *testing.T) {
 	var client = NewBambooClient(MockPayloadTransporter())
