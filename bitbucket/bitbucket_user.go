@@ -9,6 +9,7 @@ type GroupResponse struct {
 }
 
 type User struct {
+	Id           int64  `json:"id,omitempty"`
 	Name         string `json:"name,omitempty"`
 	EmailAddress string `json:"emailAddress,omitempty"`
 	Active       bool   `json:"active,omitempty"`

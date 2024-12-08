@@ -11,9 +11,22 @@ const findGroup = "/rest/api/latest/groups?filter=%s"
 
 type UserService struct {
 	transport transport.PayloadTransport
+	userCache map[string]User
+}
+
+func NewUserService(transport transport.PayloadTransport) *UserService {
+	return &UserService{
+		transport: transport,
+		userCache: make(map[string]User),
+	}
 }
 
 func (service *UserService) FindUser(user string) (*User, error) {
+	foundUser, ok := service.userCache[user]
+	if ok {
+		return &foundUser, nil
+	}
+
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
 		Url:    fmt.Sprintf(findUser, user),
@@ -31,6 +44,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 
 	for _, test := range response.Values {
 		if test.Name == user {
+			service.userCache[test.EmailAddress] = test
 			return &test, nil
 		}
 	}
