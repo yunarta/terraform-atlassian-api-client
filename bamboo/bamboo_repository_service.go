@@ -18,23 +18,25 @@ type RepositoryService struct {
 
 // CreateRepository holds the data necessary to create a new repository.
 type CreateRepository struct {
-	Name           string
-	ProjectKey     string
-	RepositorySlug string
-	ServerId       string
-	ServerName     string
-	CloneUrl       string
+	Name             string
+	ProjectKey       string
+	RepositorySlug   string
+	RepositoryBranch string
+	ServerId         string
+	ServerName       string
+	CloneUrl         string
 }
 
 // CreateProjectRepository holds the data necessary to create a new repository.
 type CreateProjectRepository struct {
-	Project        string
-	Name           string
-	ProjectKey     string
-	RepositorySlug string
-	ServerId       string
-	ServerName     string
-	CloneUrl       string
+	Project          string
+	Name             string
+	ProjectKey       string
+	RepositorySlug   string
+	RepositoryBranch string
+	ServerId         string
+	ServerName       string
+	CloneUrl         string
 }
 
 // Create initializes a new repository with the specified parameters.
@@ -112,7 +114,7 @@ rootEntity: !!com.atlassian.bamboo.specs.model.repository.bitbucket.server.Bitbu
   name: %s
   projectKey: %s
   repositorySlug: %s
-  branch: master
+  branch: %s
   server:
     id: %s
     name: %s
@@ -124,6 +126,7 @@ specModelVersion: 9.3.0
 				create.Name,
 				create.ProjectKey,
 				create.RepositorySlug,
+				create.RepositoryBranch,
 				create.ServerId,
 				create.ServerName,
 				create.CloneUrl,
@@ -276,7 +279,7 @@ rootEntity: !!com.atlassian.bamboo.specs.model.repository.bitbucket.server.Bitbu
   name: %s
   projectKey: %s
   repositorySlug: %s
-  branch: master
+  branch: %s
   server:
     id: %s
     name: %s
@@ -288,6 +291,7 @@ specModelVersion: 9.3.0
 				request.Name,
 				request.ProjectKey,
 				request.RepositorySlug,
+				request.RepositoryBranch,
 				request.ServerId,
 				request.ServerName,
 				request.CloneUrl,
@@ -338,7 +342,7 @@ rootEntity: !!com.atlassian.bamboo.specs.model.repository.bitbucket.server.Bitbu
   name: %s
   projectKey: %s
   repositorySlug: %s
-  branch: master
+  branch: %s
   server:
     id: %s
     name: %s
@@ -351,6 +355,7 @@ specModelVersion: 9.3.0
 				request.Name,
 				request.ProjectKey,
 				request.RepositorySlug,
+				request.RepositoryBranch,
 				request.ServerId,
 				request.ServerName,
 				request.CloneUrl,
@@ -362,6 +367,38 @@ specModelVersion: 9.3.0
 	}
 
 	return nil
+}
+
+func (service *RepositoryService) Delete(repositoryId int) error {
+	// Send a DELETE request to remove an accessor from the repository.
+	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    "/admin/deleteLinkedRepository.action",
+		Payload: &XFormPayload{
+			Data: fmt.Sprintf("repositoryId=%d", repositoryId),
+		},
+		Headers: map[string]string{
+			"X-Atlassian-Token": "no-check",
+		},
+	}, 200, 302)
+
+	return err
+}
+
+func (service *RepositoryService) DeleteProject(project string, repositoryId int) error {
+	// Send a DELETE request to remove an accessor from the repository.
+	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPost,
+		Url:    "/project/deleteProjectRepository.action",
+		Payload: &XFormPayload{
+			Data: fmt.Sprintf("repositoryId=%d&projectKey=%s", repositoryId, project),
+		},
+		Headers: map[string]string{
+			"X-Atlassian-Token": "no-check",
+		},
+	}, 200, 302)
+
+	return err
 }
 
 // ReadAccessor retrieves a list of repositories that a specific repository has access to.
