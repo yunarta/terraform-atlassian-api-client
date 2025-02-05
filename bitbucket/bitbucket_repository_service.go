@@ -85,6 +85,19 @@ func (service *RepositoryService) Delete(project string, repo string) error {
 	return err
 }
 
+func (service *RepositoryService) Rename(project string, repo, newRepo string) error {
+	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
+		Method: http.MethodPut,
+		Url:    fmt.Sprintf(repositoryEndPointWithId, project, repo),
+		Payload: transport.JsonPayloadData{
+			Payload: map[string]string{
+				"name": newRepo,
+			},
+		},
+	}, 201)
+	return err
+}
+
 func (service *RepositoryService) Initialize(project string, repo string, content string) (bool, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
