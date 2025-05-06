@@ -1,10 +1,11 @@
 package util
 
 import "fmt"
+import "net/url"
 
 func QueryParam(key, value string) string {
 	if len(value) > 0 {
-		return fmt.Sprintf("&%s=%s", key, value)
+		return fmt.Sprintf("&%s=%s", key, url.QueryEscape(value))
 	} else {
 		return ""
 	}
