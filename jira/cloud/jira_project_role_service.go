@@ -6,6 +6,7 @@ import (
 	"github.com/yunarta/terraform-api-transport/transport"
 	"github.com/yunarta/terraform-atlassian-api-client/jira"
 	"net/http"
+	"net/url"
 	"slices"
 	"strings"
 )
@@ -110,10 +111,10 @@ func (service *ProjectRoleService) RemoveProjectRole(projectIdOrKey string, role
 
 	var queries = make([]string, 0)
 	queries = append(queries, collections.Map(userAccountIds, func(k string) string {
-		return fmt.Sprintf("&user=%s", k)
+		return fmt.Sprintf("&user=%s", url.QueryEscape(k))
 	})...)
 	queries = append(queries, collections.Map(groupIds, func(k string) string {
-		return fmt.Sprintf("&groupId=%s", k)
+		return fmt.Sprintf("&groupId=%s", url.QueryEscape(k))
 	})...)
 
 	if len(queries) > 0 {
