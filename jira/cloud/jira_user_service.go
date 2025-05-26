@@ -6,6 +6,7 @@ import (
 	"github.com/yunarta/terraform-api-transport/transport"
 	"github.com/yunarta/terraform-atlassian-api-client/jira"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -20,7 +21,7 @@ func NewActorService(transport transport.PayloadTransport) *ActorService {
 func (service *ActorService) ReadUser(emailAddress string) (*jira.User, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/user/search?query=%s", emailAddress),
+		Url:    fmt.Sprintf("/rest/api/latest/user/search?query=%s", url.QueryEscape(emailAddress)),
 	}, 200)
 	if err != nil {
 		return nil, err
@@ -44,7 +45,7 @@ func (service *ActorService) ReadUser(emailAddress string) (*jira.User, error) {
 func (service *ActorService) ReadGroup(name string) (*jira.Group, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/groups/picker?query=%s", name),
+		Url:    fmt.Sprintf("/rest/api/latest/groups/picker?query=%s", url.QueryEscape(name)),
 	}, 200)
 	if err != nil {
 		return nil, err
@@ -67,7 +68,7 @@ func (service *ActorService) ReadGroup(name string) (*jira.Group, error) {
 
 func (service *ActorService) BulkGetUsers(accountIds []string) ([]jira.User, error) {
 	accountIdQuery := strings.Join(collections.Map(accountIds, func(e string) string {
-		return fmt.Sprintf("accountId=%s", e)
+		return fmt.Sprintf("accountId=%s", url.QueryEscape(e))
 	}), "&")
 
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
@@ -89,7 +90,7 @@ func (service *ActorService) BulkGetUsers(accountIds []string) ([]jira.User, err
 
 func (service *ActorService) BulkGetGroupsById(groupId []string) ([]jira.Group, error) {
 	groupIdQuery := strings.Join(collections.Map(groupId, func(e string) string {
-		return fmt.Sprintf("groupId=%s", e)
+		return fmt.Sprintf("groupId=%s", url.QueryEscape(e))
 	}), "&")
 
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
@@ -111,7 +112,7 @@ func (service *ActorService) BulkGetGroupsById(groupId []string) ([]jira.Group, 
 
 func (service *ActorService) BulkGetGroupsByName(groupName []string) ([]jira.Group, error) {
 	groupNameQuery := strings.Join(collections.Map(groupName, func(e string) string {
-		return fmt.Sprintf("groupName=%s", e)
+		return fmt.Sprintf("groupName=%s", url.QueryEscape(e))
 	}), "&")
 
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{

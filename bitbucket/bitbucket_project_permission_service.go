@@ -5,6 +5,7 @@ import (
 	"github.com/yunarta/terraform-api-transport/transport"
 	"github.com/yunarta/terraform-atlassian-api-client/util"
 	"net/http"
+	"net/url"
 )
 
 const (
@@ -56,7 +57,7 @@ func (service *ProjectService) readGroupsPermission(projectKey string, groupName
 func (service *ProjectService) addGroupPermission(projectKey string, username string, permission string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf(addGroupProjectPermissionEndPoint, projectKey, username, permission),
+		Url:    fmt.Sprintf(addGroupProjectPermissionEndPoint, projectKey, url.QueryEscape(username), url.QueryEscape(permission)),
 	}, 204)
 	return err
 }
@@ -64,7 +65,7 @@ func (service *ProjectService) addGroupPermission(projectKey string, username st
 func (service *ProjectService) removeGroupPermission(projectKey string, username string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf(groupProjectPermissionEndPoint, projectKey, username),
+		Url:    fmt.Sprintf(groupProjectPermissionEndPoint, projectKey, url.QueryEscape(username)),
 	}, 204)
 	return err
 }
@@ -90,7 +91,7 @@ func (service *ProjectService) readUsersPermission(projectKey string, user strin
 func (service *ProjectService) addUserPermission(projectKey string, username string, permission string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf(addUserProjectPermissionEndPoint, projectKey, username, permission),
+		Url:    fmt.Sprintf(addUserProjectPermissionEndPoint, projectKey, url.QueryEscape(username), url.QueryEscape(permission)),
 	}, 204)
 	return err
 }
@@ -98,7 +99,7 @@ func (service *ProjectService) addUserPermission(projectKey string, username str
 func (service *ProjectService) removeUserPermission(projectKey string, username string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf(userProjectPermissionEndPoint, projectKey, username),
+		Url:    fmt.Sprintf(userProjectPermissionEndPoint, projectKey, url.QueryEscape(username)),
 	}, 204)
 	return err
 }
