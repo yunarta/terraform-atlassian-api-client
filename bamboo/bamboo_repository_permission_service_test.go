@@ -16,13 +16,13 @@ func TestRepositoryService_ReadPermissions(t *testing.T) {
 	assert.NotNil(t, permissions)
 
 	slices.SortFunc(permissions.Groups, func(a, b GroupPermission) int {
-		return strings.Compare(a.Name, b.Name)
+		return strings.Compare(strings.ToLower(a.Name), strings.ToLower(b.Name))
 	})
 	slices.SortFunc(permissions.Users, func(a, b UserPermission) int {
-		return strings.Compare(a.Name, b.Name)
+		return strings.Compare(strings.ToLower(a.Name), strings.ToLower(b.Name))
 	})
 	slices.SortFunc(permissions.Roles, func(a, b RolePermission) int {
-		return strings.Compare(a.Name, b.Name)
+		return strings.Compare(strings.ToLower(a.Name), strings.ToLower(b.Name))
 	})
 
 	assert.Contains(t, permissions.Groups[0].Name, "bamboo-admin")

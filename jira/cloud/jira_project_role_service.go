@@ -61,7 +61,7 @@ func (service *ProjectRoleService) ReadProjectRoles(projectIdOrKey string) ([]ji
 	}
 
 	slices.SortFunc(rl, func(a, b jira.RoleType) int {
-		return strings.Compare(a.Name, b.Name)
+		return strings.Compare(strings.ToLower(a.Name), strings.ToLower(b.Name))
 	})
 	return rl, nil
 }

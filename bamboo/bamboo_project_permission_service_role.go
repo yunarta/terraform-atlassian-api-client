@@ -3,6 +3,7 @@ package bamboo
 import (
 	"fmt"
 	"github.com/yunarta/golang-quality-of-life-pack/collections"
+	"strings"
 )
 
 // A method of the ProjectService type (which should represent our project service).
@@ -75,7 +76,7 @@ func (service *ProjectService) addRolePermissions(projectKey string, role string
 	var permissionScope = make([]string, 0)
 	// We set the Permission Scope according to the type of User (Logged In/Anonymous).
 	// This understanding of role & permission context helps target permissions updates accurately.
-	if role == "LOGGED_IN" {
+	if strings.EqualFold(role, "LOGGED_IN") {
 		permissionScope = projectPermissions
 	} else {
 		permissionScope = anonymousPermissions
@@ -94,7 +95,7 @@ func (service *ProjectService) addRolePermissions(projectKey string, role string
 	}
 
 	// Repeat the process, but this time for permissions related to project plans.
-	if role == "LOGGED_IN" {
+	if strings.EqualFold(role, "LOGGED_IN") {
 		permissionScope = projectPlanPermissions
 	} else {
 		permissionScope = anonymousPermissions
@@ -114,7 +115,7 @@ func (service *ProjectService) removeRolePermissions(projectKey string, role str
 	// The same design considerations apply, again demonstrating how a design pattern can streamline code flow.
 	var err error
 	var permissionScope = make([]string, 0)
-	if role == "LOGGED_IN" {
+	if strings.EqualFold(role, "LOGGED_IN") {
 		permissionScope = projectPermissions
 	} else {
 		permissionScope = anonymousPermissions
@@ -130,7 +131,7 @@ func (service *ProjectService) removeRolePermissions(projectKey string, role str
 		return err
 	}
 
-	if role == "LOGGED_IN" {
+	if strings.EqualFold(role, "LOGGED_IN") {
 		permissionScope = projectPlanPermissions
 	} else {
 		permissionScope = anonymousPermissions

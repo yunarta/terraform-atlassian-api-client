@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
 )
 
 const (
@@ -46,7 +47,7 @@ func (service *ProjectService) Read(key string) (*Project, error) {
 	// Sending a GET request to read a project
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf(projectEndpoint, key),
+		Url:    fmt.Sprintf(projectEndpoint, url.QueryEscape(key)),
 	}, 200)
 
 	if err != nil {
@@ -68,7 +69,7 @@ func (service *ProjectService) Update(key string, update ProjectUpdate) (*Projec
 	// Sending a GET request to update a project
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf(projectEndpoint, key),
+		Url:    fmt.Sprintf(projectEndpoint, url.QueryEscape(key)),
 		Payload: transport.JsonPayloadData{
 			Payload: update,
 		},
@@ -92,7 +93,7 @@ func (service *ProjectService) Update(key string, update ProjectUpdate) (*Projec
 func (service *ProjectService) Delete(key string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf(projectEndpoint, key),
+		Url:    fmt.Sprintf(projectEndpoint, url.QueryEscape(key)),
 	}, 204)
 
 	// We just return the result of the delete command.

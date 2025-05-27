@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 const findUser = "/rest/api/latest/users?filter=%s"
@@ -29,7 +31,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf(findUser, user),
+		Url:    fmt.Sprintf(findUser, url.QueryEscape(user)),
 	}, 200)
 
 	if err != nil {
@@ -43,7 +45,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 	}
 
 	for _, test := range response.Values {
-		if test.Name == user {
+		if strings.EqualFold(test.Name, user) {
 			service.userCache[test.EmailAddress] = test
 			return &test, nil
 		}
@@ -55,7 +57,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 func (service *UserService) FindGroup(group string) (*Group, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf(findGroup, group),
+		Url:    fmt.Sprintf(findGroup, url.QueryEscape(group)),
 	}, 200)
 
 	if err != nil {
@@ -69,7 +71,7 @@ func (service *UserService) FindGroup(group string) (*Group, error) {
 	}
 
 	for _, item := range response.Values {
-		if item == group {
+		if strings.EqualFold(item, group) {
 			return &Group{
 				Name: item,
 			}, nil

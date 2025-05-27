@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
+	"strings"
 )
 
 // UserService struct represents a service to interact with user-related functionalities.
@@ -58,7 +60,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 	// The URL includes a query parameter for filtering by the username.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/admin/users?filter=%s", user),
+		Url:    fmt.Sprintf("/rest/api/latest/admin/users?filter=%s", url.QueryEscape(user)),
 	}, 200)
 
 	// Error handling - if an error occurs during the request, return the error.
@@ -79,7 +81,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 	// Iterating through the results to find a matching user.
 	for _, item := range response.Results {
 		// If a match is found, return the user.
-		if item.Name == user {
+		if strings.EqualFold(item.Name, user) {
 			return &item, nil
 		}
 	}
@@ -95,7 +97,7 @@ func (service *UserService) FindGroup(group string) (*Group, error) {
 	// The URL includes a query parameter for filtering by the group name.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/admin/groups?filter=%s", group),
+		Url:    fmt.Sprintf("/rest/api/latest/admin/groups?filter=%s", url.QueryEscape(group)),
 	}, 200)
 
 	// Error handling - if an error occurs during the request, return the error.
@@ -116,7 +118,7 @@ func (service *UserService) FindGroup(group string) (*Group, error) {
 	// Iterating through the results to find a matching group.
 	for _, item := range response.Results {
 		// If a match is found, return the group.
-		if item.Name == group {
+		if strings.EqualFold(item.Name, group) {
 			return &item, nil
 		}
 	}
