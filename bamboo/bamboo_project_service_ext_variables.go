@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
 )
 
 func (service *ProjectService) GetVariables(projectKey string, key string) (string, error) {
 	// We send a DELETE request to remove a repository from a project. A 204 status code signifies success.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/variable/%s", projectKey, key),
+		Url:    fmt.Sprintf("/rest/api/latest/project/%s/variable/%s", url.QueryEscape(projectKey), url.QueryEscape(key)),
 	}, 200)
 	// If there's a communication error, we return it immediately.
 	if err != nil {
@@ -30,7 +31,7 @@ func (service *ProjectService) PutVariables(projectKey string, key string, value
 	// We send a DELETE request to remove a repository from a project. A 204 status code signifies success.
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/variable", projectKey),
+		Url:    fmt.Sprintf("/rest/api/latest/project/%s/variable", url.QueryEscape(projectKey)),
 		Payload: transport.JsonPayloadData{
 			Payload: map[string]string{
 				"name":  key,
@@ -46,7 +47,7 @@ func (service *ProjectService) DeleteVariables(projectKey string, key string) er
 	// We send a DELETE request to remove a repository from a project. A 204 status code signifies success.
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/variable/%s", projectKey, key),
+		Url:    fmt.Sprintf("/rest/api/latest/project/%s/variable/%s", url.QueryEscape(projectKey), url.QueryEscape(key)),
 	}, 204)
 	// If there's a communication error, we return it immediately.
 	return err

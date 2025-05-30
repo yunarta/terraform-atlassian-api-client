@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
 func (service *ProjectService) EnableMergeCheck(project, check string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/enabled?enrich=true", project, check),
+		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/enabled?enrich=true", url.QueryEscape(project), url.QueryEscape(check)),
 	}, 200)
 	return err
 }
@@ -18,7 +19,7 @@ func (service *ProjectService) EnableMergeCheck(project, check string) error {
 func (service *ProjectService) DisableMergeCheck(project, check string) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/enabled?enrich=true", project, check),
+		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/enabled?enrich=true", url.QueryEscape(project), url.QueryEscape(check)),
 	}, 200)
 	return err
 }
@@ -26,7 +27,7 @@ func (service *ProjectService) DisableMergeCheck(project, check string) error {
 func (service *ProjectService) ConfigureMergeCheck(project, check string, value int) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/enabled?enrich=true", project, check),
+		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/enabled?enrich=true", url.QueryEscape(project), url.QueryEscape(check)),
 		Payload: &transport.JsonPayloadData{
 			Payload: map[string]string{
 				"requiredCount": strconv.Itoa(value),
@@ -39,7 +40,7 @@ func (service *ProjectService) ConfigureMergeCheck(project, check string, value 
 func (service *ProjectService) GetMergeChecks(project string) ([]MergeCheck, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks", project),
+		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks", url.QueryEscape(project)),
 	}, 200)
 
 	if err != nil {
@@ -59,7 +60,7 @@ func (service *ProjectService) GetMergeChecks(project string) ([]MergeCheck, err
 func (service *ProjectService) GetMergeCheckSetting(project, check string) (*MergeCheckSetting, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/settings", project, check),
+		Url:    fmt.Sprintf("/rest/api/latest/projects/%s/settings/hooks/%s/settings", url.QueryEscape(project), url.QueryEscape(check)),
 	}, 200)
 
 	if err != nil {

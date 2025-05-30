@@ -167,7 +167,7 @@ func (service *RepositoryService) Read(name string) (*Repository, error) {
 	// Send a GET request to search for a repository by name.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/repository?max-result=1000&searchTerm=%s", name),
+		Url:    fmt.Sprintf("/rest/api/latest/repository?max-result=1000&searchTerm=%s", url.QueryEscape(name)),
 	}, 200)
 	if err != nil {
 		return nil, err
@@ -195,7 +195,7 @@ func (service *RepositoryService) ReadProject(project string, name string) (*Rep
 	// Send a GET request to search for a repository by name.
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/api/latest/project/%s/repositories?max-result=1000&filter=%s", project, name),
+		Url:    fmt.Sprintf("/rest/api/latest/project/%s/repositories?max-result=1000&filter=%s", url.QueryEscape(project), url.QueryEscape(name)),
 	}, 200)
 	if err != nil {
 		return nil, err

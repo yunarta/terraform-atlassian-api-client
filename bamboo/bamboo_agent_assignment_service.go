@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
 )
 
 type AgentAssignmentService struct {
@@ -15,11 +16,15 @@ func (service *AgentAssignmentService) Read(request AgentQuery) (*[]AgentAssignm
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
 		Url: fmt.Sprintf("/rest/api/latest/agent/assignment?executorType=%s&executorId=%d",
-			request.ExecutorType,
+			url.QueryEscape(request.ExecutorType),
 			request.ExecutorId,
 		),
 		// Check for any errors. If there's an error, it's returned immediately.
 	}, 200)
+
+	if err != nil {
+		return nil, err
+	}
 
 	deployment := make([]AgentAssignment, 0)
 	err = reply.Object(&deployment)
@@ -34,10 +39,10 @@ func (service *AgentAssignmentService) Create(request AgentAssignmentRequest) er
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
 		Url: fmt.Sprintf("/rest/api/latest/agent/assignment?executorType=%s&executorId=%d&entityId=%d&assignmentType=%s",
-			request.ExecutorType,
+			url.QueryEscape(request.ExecutorType),
 			request.ExecutorId,
 			request.EntityId,
-			request.AssignmentType,
+			url.QueryEscape(request.AssignmentType),
 		),
 		// Check for any errors. If there's an error, it's returned immediately.
 	}, 200)
@@ -48,10 +53,10 @@ func (service *AgentAssignmentService) Delete(request AgentAssignmentRequest) er
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
 		Url: fmt.Sprintf("/rest/api/latest/agent/assignment?executorType=%s&executorId=%d&entityId=%d&assignmentType=%s",
-			request.ExecutorType,
+			url.QueryEscape(request.ExecutorType),
 			request.ExecutorId,
 			request.EntityId,
-			request.AssignmentType,
+			url.QueryEscape(request.AssignmentType),
 		),
 	}, 204)
 	return err

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yunarta/golang-quality-of-life-pack/collections"
 	"github.com/yunarta/terraform-atlassian-api-client/jira"
+	"strings"
 )
 
 type RoleActorType int
@@ -135,9 +136,9 @@ func (manager *ProjectRoleManage) processRoles(roles []jira.RoleType) (map[strin
 			continue // Log the error in production code
 		}
 		for _, actor := range actors {
-			if actor.Type == "atlassian-group-role-actor" {
+			if strings.EqualFold(actor.Type, "atlassian-group-role-actor") {
 				manager.addGroupRole(groupRoles, role.Name, actor)
-			} else if actor.Type == "atlassian-user-role-actor" {
+			} else if strings.EqualFold(actor.Type, "atlassian-user-role-actor") {
 				manager.addUserRole(userRoles, role.Name, actor)
 			}
 		}

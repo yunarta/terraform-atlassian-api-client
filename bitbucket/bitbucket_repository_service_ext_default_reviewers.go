@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"net/url"
 )
 
 func (service *RepositoryService) AddDefaultReviewers(project, repository string, reviewers DefaultReviewers) (*DefaultReviewers, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPost,
-		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/condition", project, repository),
+		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/condition", url.QueryEscape(project), url.QueryEscape(repository)),
 		Payload: &transport.JsonPayloadData{
 			Payload: reviewers,
 		},
@@ -33,7 +34,7 @@ func (service *RepositoryService) AddDefaultReviewers(project, repository string
 func (service *RepositoryService) ReadDefaultReviewers(project, repository string, id int64) (*ReadDefaultReviewers, error) {
 	reply, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodGet,
-		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/conditions", project, repository),
+		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/conditions", url.QueryEscape(project), url.QueryEscape(repository)),
 	}, 200)
 
 	if err != nil {
@@ -60,7 +61,7 @@ func (service *RepositoryService) ReadDefaultReviewers(project, repository strin
 func (service *RepositoryService) UpdateDefaultReviewers(project, repository string, id int64, reviewers DefaultReviewers) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodPut,
-		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/condition/%d", project, repository, id),
+		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/condition/%d", url.QueryEscape(project), url.QueryEscape(repository), id),
 		Payload: &transport.JsonPayloadData{
 			Payload: reviewers,
 		},
@@ -71,7 +72,7 @@ func (service *RepositoryService) UpdateDefaultReviewers(project, repository str
 func (service *RepositoryService) DeleteDefaultReviewers(project, repository string, id int64) error {
 	_, err := service.transport.SendWithExpectedStatus(&transport.PayloadRequest{
 		Method: http.MethodDelete,
-		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/condition/%d", project, repository, id),
+		Url:    fmt.Sprintf("/rest/default-reviewers/1.0/projects/%s/repos/%s/condition/%d", url.QueryEscape(project), url.QueryEscape(repository), id),
 	}, 200)
 	return err
 }

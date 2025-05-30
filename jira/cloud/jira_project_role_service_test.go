@@ -29,7 +29,7 @@ func TestProjectRoleService_ReadProjectRoles(t *testing.T) {
 	assert.Nil(t, err)
 
 	slices.SortFunc(roles, func(a, b jira.RoleType) int {
-		return strings.Compare(a.Name, b.Name)
+		return strings.Compare(strings.ToLower(a.Name), strings.ToLower(b.Name))
 	})
 	assert.Equal(t, "Administrators", roles[0].Name)
 	assert.Equal(t, "Contributor", roles[1].Name)
@@ -46,7 +46,7 @@ func TestProjectRoleService_ReadProjectRoleActors(t *testing.T) {
 	assert.Nil(t, err)
 
 	slices.SortFunc(actors, func(a, b jira.Actor) int {
-		return strings.Compare(a.DisplayName, b.DisplayName)
+		return strings.Compare(strings.ToLower(a.DisplayName), strings.ToLower(b.DisplayName))
 	})
 
 	assert.Equal(t, "Administrator", actors[0].DisplayName)
