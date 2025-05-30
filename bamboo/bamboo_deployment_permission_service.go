@@ -3,6 +3,7 @@ package bamboo
 import (
 	"fmt"
 	"github.com/yunarta/terraform-atlassian-api-client/util"
+	"strings"
 )
 
 // ReadPermissions function, reading permissions of a deployment, grouping them by users, groups and roles.
@@ -194,7 +195,7 @@ func (service *DeploymentService) FindAvailableUser(deploymentId int, username s
 	}
 
 	for _, user := range userPermissions.Results {
-		if user.Name == username {
+		if strings.EqualFold(user.Name, username) {
 			return &user, nil
 		}
 	}
@@ -205,7 +206,7 @@ func (service *DeploymentService) FindAvailableUser(deploymentId int, username s
 	}
 
 	for _, user := range userPermissions.Results {
-		if user.Name == username {
+		if strings.EqualFold(user.Name, username) {
 			return &user, nil
 		}
 	}
@@ -229,7 +230,7 @@ func (service *DeploymentService) FindAvailableGroup(deploymentId int, groupName
 	}
 
 	for _, group := range groupPermissions.Results {
-		if group.Name == groupName {
+		if strings.EqualFold(group.Name, groupName) {
 			return &group, nil
 		}
 	}
@@ -240,7 +241,7 @@ func (service *DeploymentService) FindAvailableGroup(deploymentId int, groupName
 	}
 
 	for _, group := range groupPermissions.Results {
-		if group.Name == groupName {
+		if strings.EqualFold(group.Name, groupName) {
 			return &group, nil
 		}
 	}

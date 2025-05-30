@@ -1,5 +1,7 @@
 package bamboo
 
+import "strings"
+
 // PermissionResponse interface defines a method for finding a PermissionsComparator based on a key.
 type PermissionResponse interface {
 	Find(key string) PermissionsComparator
@@ -30,7 +32,7 @@ var _ PermissionResponse = &GroupPermissionResponse{}
 // Find locates a group by name and returns it as a PermissionsComparator.
 func (permissions *GroupPermissionResponse) Find(groupName string) PermissionsComparator {
 	for _, permission := range permissions.Results {
-		if permission.Name == groupName {
+		if strings.EqualFold(permission.Name, groupName) {
 			return &permission
 		}
 	}
@@ -65,7 +67,7 @@ var _ PermissionResponse = &UserPermissionResponse{}
 // Find locates a user by name and returns it as a PermissionsComparator.
 func (permissions *UserPermissionResponse) Find(userName string) PermissionsComparator {
 	for _, permission := range permissions.Results {
-		if permission.Name == userName {
+		if strings.EqualFold(permission.Name, userName) {
 			return &permission
 		}
 	}
@@ -101,7 +103,7 @@ var _ PermissionResponse = &RolePermissionResponse{}
 // Find locates a role by name and returns it as a PermissionsComparator.
 func (permissions *RolePermissionResponse) Find(roleName string) PermissionsComparator {
 	for _, permission := range permissions.Results {
-		if permission.Name == roleName {
+		if strings.EqualFold(permission.Name, roleName) {
 			return &permission
 		}
 	}
@@ -150,7 +152,7 @@ func deltaPermissions(existingPermissions []string, newPermissions []string) ([]
 // contains checks if a permission exists in a slice of permissions.
 func contains(slice []string, perm string) bool {
 	for _, v := range slice {
-		if v == perm {
+		if strings.EqualFold(v, perm) {
 			return true
 		}
 	}

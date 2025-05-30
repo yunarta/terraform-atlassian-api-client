@@ -3,6 +3,7 @@ package bamboo
 import (
 	"fmt"
 	"github.com/yunarta/terraform-atlassian-api-client/util"
+	"strings"
 )
 
 // Define constants
@@ -149,7 +150,7 @@ func (service *ProjectService) FindAvailableUser(projectKey string, username str
 	}
 
 	for _, user := range userPermissions.Results {
-		if user.Name == username {
+		if strings.EqualFold(user.Name, username) {
 			return &user, nil
 		}
 	}
@@ -160,7 +161,7 @@ func (service *ProjectService) FindAvailableUser(projectKey string, username str
 	}
 
 	for _, user := range userPermissions.Results {
-		if user.Name == username {
+		if strings.EqualFold(user.Name, username) {
 			return &user, nil
 		}
 	}
@@ -184,7 +185,7 @@ func (service *ProjectService) FindAvailableGroup(projectKey string, groupName s
 	}
 
 	for _, group := range groupPermissions.Results {
-		if group.Name == groupName {
+		if strings.EqualFold(group.Name, groupName) {
 			return &group, nil
 		}
 	}
@@ -195,7 +196,7 @@ func (service *ProjectService) FindAvailableGroup(projectKey string, groupName s
 	}
 
 	for _, group := range groupPermissions.Results {
-		if group.Name == groupName {
+		if strings.EqualFold(group.Name, groupName) {
 			return &group, nil
 		}
 	}

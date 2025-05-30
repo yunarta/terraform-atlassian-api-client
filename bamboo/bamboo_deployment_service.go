@@ -5,6 +5,7 @@ import (
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // Define constants representing the endpoints of our application's API.
@@ -73,7 +74,7 @@ func (service *DeploymentService) Read(deploymentName string) (*Deployment, erro
 
 	// Iterate over the Deployments to find a matching Deployment name.
 	for _, deployment := range deploymentList.Results {
-		if deployment.SearchEntity.ProjectName == deploymentName {
+		if strings.EqualFold(deployment.SearchEntity.ProjectName, deploymentName) {
 			// If found, go ahead and get the full Deployment data using its ID.
 			id, err := strconv.Atoi(deployment.Id)
 			if err != nil {

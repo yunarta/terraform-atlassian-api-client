@@ -86,7 +86,7 @@ specModelVersion: 9.3.0
 	// Extract the repository ID from the query parameters of the URL.
 	queryParams := parsedURL.Query()
 	repositoryId := queryParams.Get("repositoryId")
-	if repositoryId == "" {
+	if strings.TrimSpace(repositoryId) == "" {
 		return 0, fmt.Errorf("repositoryId not found")
 	} else {
 		// Convert the repository ID from string to int.
@@ -148,7 +148,7 @@ specModelVersion: 9.3.0
 	// Extract the repository ID from the query parameters of the URL.
 	queryParams := parsedURL.Query()
 	repositoryId := queryParams.Get("repositoryId")
-	if repositoryId == "" {
+	if strings.TrimSpace(repositoryId) == "" {
 		return 0, fmt.Errorf("repositoryId not found")
 	} else {
 		// Convert the repository ID from string to int.
