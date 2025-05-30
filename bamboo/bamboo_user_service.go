@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/yunarta/terraform-api-transport/transport"
 	"net/http"
+	"strings"
 )
 
 // UserService struct represents a service to interact with user-related functionalities.
@@ -79,7 +80,7 @@ func (service *UserService) FindUser(user string) (*User, error) {
 	// Iterating through the results to find a matching user.
 	for _, item := range response.Results {
 		// If a match is found, return the user.
-		if item.Name == user {
+		if strings.EqualFold(item.Name, user) {
 			return &item, nil
 		}
 	}
@@ -116,7 +117,7 @@ func (service *UserService) FindGroup(group string) (*Group, error) {
 	// Iterating through the results to find a matching group.
 	for _, item := range response.Results {
 		// If a match is found, return the group.
-		if item.Name == group {
+		if strings.EqualFold(item.Name, group) {
 			return &item, nil
 		}
 	}

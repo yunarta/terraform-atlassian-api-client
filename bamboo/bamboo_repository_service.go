@@ -86,7 +86,7 @@ specModelVersion: 9.3.0
 	// Extract the repository ID from the query parameters of the URL.
 	queryParams := parsedURL.Query()
 	repositoryId := queryParams.Get("repositoryId")
-	if repositoryId == "" {
+	if strings.TrimSpace(repositoryId) == "" {
 		return 0, fmt.Errorf("repositoryId not found")
 	} else {
 		// Convert the repository ID from string to int.
@@ -148,7 +148,7 @@ specModelVersion: 9.3.0
 	// Extract the repository ID from the query parameters of the URL.
 	queryParams := parsedURL.Query()
 	repositoryId := queryParams.Get("repositoryId")
-	if repositoryId == "" {
+	if strings.TrimSpace(repositoryId) == "" {
 		return 0, fmt.Errorf("repositoryId not found")
 	} else {
 		// Convert the repository ID from string to int.
@@ -182,7 +182,7 @@ func (service *RepositoryService) Read(name string) (*Repository, error) {
 
 	// Iterate over the results to find the repository with the matching name.
 	for _, repository := range response.Results {
-		if repository.Name == name {
+		if strings.EqualFold(repository.Name, name) {
 			return &repository, nil
 		}
 	}
@@ -210,7 +210,7 @@ func (service *RepositoryService) ReadProject(project string, name string) (*Rep
 
 	// Iterate over the results to find the repository with the matching name.
 	for _, repository := range response.Results {
-		if repository.Name == name {
+		if strings.EqualFold(repository.Name, name) {
 			return &repository, nil
 		}
 	}

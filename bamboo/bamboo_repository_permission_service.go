@@ -3,6 +3,7 @@ package bamboo
 import (
 	"fmt"
 	"github.com/yunarta/terraform-atlassian-api-client/util"
+	"strings"
 )
 
 // ReadPermissions retrieves permissions for a specific repository.
@@ -196,7 +197,7 @@ func (service *RepositoryService) FindAvailableUser(repositoryId int, username s
 	}
 
 	for _, user := range userPermissions.Results {
-		if user.Name == username {
+		if strings.EqualFold(user.Name, username) {
 			return &user, nil
 		}
 	}
@@ -207,7 +208,7 @@ func (service *RepositoryService) FindAvailableUser(repositoryId int, username s
 	}
 
 	for _, user := range userPermissions.Results {
-		if user.Name == username {
+		if strings.EqualFold(user.Name, username) {
 			return &user, nil
 		}
 	}
@@ -231,7 +232,7 @@ func (service *RepositoryService) FindAvailableGroup(repositoryId int, groupName
 	}
 
 	for _, group := range groupPermissions.Results {
-		if group.Name == groupName {
+		if strings.EqualFold(group.Name, groupName) {
 			return &group, nil
 		}
 	}
@@ -242,7 +243,7 @@ func (service *RepositoryService) FindAvailableGroup(repositoryId int, groupName
 	}
 
 	for _, group := range groupPermissions.Results {
-		if group.Name == groupName {
+		if strings.EqualFold(group.Name, groupName) {
 			return &group, nil
 		}
 	}
